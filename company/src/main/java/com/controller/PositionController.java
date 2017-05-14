@@ -4,7 +4,9 @@ import com.dao.CompanyRepository;
 import com.dao.PositionRepository;
 import com.models.Company;
 import com.models.Position;
+import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -37,11 +39,11 @@ public class PositionController
     }
 
     @RequestMapping(value = "/postjob",method = RequestMethod.POST)
-    public String addNewPosition(@ModelAttribute("position") Position position)
+    public String addNewPosition(@ModelAttribute("position") Position position,
+                                 HttpSession session)
     {
         System.out.print("in post job: "+position.getLocation());
-
-        Company company = companyRepository.findOne((long)1);//get company id from session
+        Company company = (Company)session.getAttribute("company");
         position.setCompany(company);
         positionRepository.save(position);
         return "redirect:/viewjobs";
@@ -80,10 +82,38 @@ public class PositionController
     }
 
     @RequestMapping(value = "/position/{id}", method = RequestMethod.GET)
-    public String viewJob(@PathVariable long id,Model model)
+    public String viewJob(@PathVariable long id,Model model,HttpSession session)
     {
-        Position position=positionRepository.findOne(id);
-        model.addAttribute("position",position);
-        return "job";
+        if(session.getAttribute("company")!=null)
+        {
+            Company company=(Company) session.getAttribute("company");
+            List<Position> positionList=company.getPositions();
+            Position position = positionRepository.findOne(id);
+
+            if(checkIfPositionBelongsToCompany(position,company))
+            {
+                model.addAttribute("position", position);
+                return "job";
+            }
+            else
+            {
+                return "error";
+            }
+        }
+        else
+            return "login";
+    }
+
+
+    private boolean checkIfPositionBelongsToCompany(Position position,Company company)
+    {
+        boolean flag=false;
+        List<Position> positionList=company.getPositions();
+        for (Position temp:positionList)
+        {
+            if(temp.getId()==position.getId())
+                flag=true;
+        }
+        return flag;
     }
 }

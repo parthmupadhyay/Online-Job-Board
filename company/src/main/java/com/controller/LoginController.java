@@ -25,8 +25,12 @@ public class LoginController {
 
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String login() {
-        return "login";
+    public String login(HttpSession session)
+    {
+        if(session.getAttribute("company")!=null)
+            return "redirect:/viewjobs";
+        else
+            return "login";
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)

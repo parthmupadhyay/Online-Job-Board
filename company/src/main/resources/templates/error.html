@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
 
-    <title>Online Job Portal - Update Job Posting</title>
+    <title>Online Job Portal - New Job</title>
     <!-- Fav Icon -->
     <link rel="shortcut icon" href="favicon.ico"/>
 
@@ -28,42 +28,28 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6 col-sm-6">
-                <h1 class="page-heading">Posted Jobs</h1>
+                <h1>Position Details</h1>
             </div>
+
         </div>
     </div>
 </div>
 
-<div class="listpgWraper">
+<div class="error-page-wrap">
     <div class="container">
-
-        <!-- Blog start -->
-        <div class="row">
-            <div class="col-md-12">
-                <!-- Blog List start -->
-                <div class="blogWraper">
-                    <ul class="blogGrid row">
-                        <!-- Blog Box -->
-
-                        <li class="col-md-4 col-sm-4" data-th-each="position : ${positionList}">
-                            <div class="int">
-                                <!-- Blog info -->
-                                <div class="post-header">
-                                    <h4><a th:href="@{'/position/'+${position.id}}" ><span th:text="${position.title}"></span></a></h4>
-                                    <div class="Location">Location : <span th:text="${position.location}"></span></div>
-                                </div>
-                                <p th:text="${position.description}"></p>
-                                <a th:href="@{'/updatePosition/'+${position.id}}" class="readmore">Edit Position</a>
-                            </div>
-                        </li>
-
-                    </ul>
-                </div>
-            </div>
-
+        <div class="errormain">
+            <h2>404</h2>
+            <h3>Page was not Found</h3>
+            <div class="error-msg">
+                <p>The page you are looking is not available or has been removed. Try going to Home Page by using the button below.</p>
+                <a href="#." class="btn">Go to Home Page</a> </div>
         </div>
     </div>
 </div>
+
+
+<!--Footer-->
+
 <div th:replace="common/footer :: footer"/>
 <!--Footer end-->
 

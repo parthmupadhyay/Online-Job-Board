@@ -66,6 +66,7 @@
                                                 <span th:if="${position.status}=='2'">Cancelled</span></div>
             </li>
         </ul>
+                <button class="btn btn-danger" type="button" th:if="${position.status}=='0'">Cancel Position</button>
             </div>
         </div>
     </div>
