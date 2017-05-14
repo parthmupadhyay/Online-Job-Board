@@ -24,7 +24,7 @@ public class Job_application {
     @JoinColumn(name = "jobseeker_id")
     private Job_seeker job_seeker;
 
-    private int status;//Pending, Offered, Rejected, OfferAccepted, OfferRejcted, or Cancelled
+    private int status;//Pending=0, Offered=1, Rejected=2, OfferAccepted=3, OfferRejcted=4, or Cancelled=5
 
     public int getStatus() {
         return status;
