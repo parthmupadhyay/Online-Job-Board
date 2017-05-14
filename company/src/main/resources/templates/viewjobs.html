@@ -35,7 +35,27 @@
 </div>
 
 <div class="listpgWraper">
-    <div class="container">
+    <div class="col-md-3">
+        <div class="blogWraper">
+            <ul class="blogGrid row">
+                <li class="col-md-12">
+                    <div class="int" style="min-height: 300px">
+                        <form method="post" th:action="@{/viewjobs}">
+
+                        <h4>Open Positions</h4>
+                        <input type="checkbox" name="open" id="open" th:checked="${filters[0]}"/><br/><br/>
+                        <h4>Cancelled Positions</h4>
+                        <input type="checkbox" name="cancelled" id="cancelled" th:checked="${filters[1]}"/><br/><br/>
+                        <h4>Filled Positions</h4>
+                        <input type="checkbox" name="filled" id="filled" th:checked="${filters[2]}"/><br/><br/>
+                        <button class="btn btn-success" type="submit">Apply Filter</button>
+                        </form>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-9">
 
         <!-- Blog start -->
         <div class="row">
@@ -46,14 +66,17 @@
                         <!-- Blog Box -->
 
                         <li class="col-md-4 col-sm-4" data-th-each="position : ${positionList}">
-                            <div class="int">
+                            <div class="int" style="min-height: 300px">
                                 <!-- Blog info -->
                                 <div class="post-header">
                                     <h4><a th:href="@{'/position/'+${position.id}}" ><span th:text="${position.title}"></span></a></h4>
                                     <div class="Location">Location : <span th:text="${position.location}"></span></div>
                                 </div>
                                 <p th:text="${position.description}"></p>
-                                <a th:href="@{'/updatePosition/'+${position.id}}" class="readmore">Edit Position</a>
+                                <a th:href="@{'/updatePosition/'+${position.id}}" class="btn btn-success">Edit Position</a>
+                                <span class="readmore pull-right" th:if="${position.status}=='0'">Open</span>
+                                <span class="readmore pull-right" th:if="${position.status}=='1'">Filled</span>
+                                <span class="readmore pull-right" th:if="${position.status}=='2'">Cancelled</span>
                             </div>
                         </li>
 
