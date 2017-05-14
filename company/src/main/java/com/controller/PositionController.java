@@ -3,15 +3,21 @@ package com.controller;
 import com.dao.CompanyRepository;
 import com.dao.PositionRepository;
 import com.models.Company;
+import com.models.Job_application;
+import com.models.Job_seeker;
 import com.models.Position;
 import com.sun.org.apache.xpath.internal.operations.Bool;
+import com.utility.NotificationService;
 import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -29,6 +35,9 @@ public class PositionController
 
     @Autowired
     PositionRepository positionRepository;
+
+    @Autowired
+    NotificationService notificationService;
 
     @RequestMapping(value = "/postjob",method = RequestMethod.GET)
     public String loadPostJob(Model model)
@@ -60,16 +69,35 @@ public class PositionController
     }
 
     @RequestMapping(value = "/updatePosition",method = RequestMethod.POST)
-    public String loadUpdatePosition(@ModelAttribute("position") Position position)
+    public String updatePosition(@ModelAttribute("position") Position position, HttpSession session, HttpServletRequest request)
     {
-        Position updatePosition=positionRepository.findOne(position.getId());
-        updatePosition.setDescription(position.getDescription());
-        updatePosition.setLocation(position.getLocation());
-        updatePosition.setResponsibilities(position.getResponsibilities());
-        updatePosition.setSalary(position.getSalary());
-        updatePosition.setTitle(position.getTitle());
-        positionRepository.save(updatePosition);
-        return "redirect:/viewjobs";//should redirect to posted jobs page
+        if(session.getAttribute("company")!=null)
+        {
+            Company company=(Company) session.getAttribute("company");
+            Position updatePosition = positionRepository.findOne(position.getId());
+            if(checkIfPositionBelongsToCompany(updatePosition,company))
+            {
+                updatePosition.setDescription(position.getDescription());
+                updatePosition.setLocation(position.getLocation());
+                updatePosition.setResponsibilities(position.getResponsibilities());
+                updatePosition.setSalary(position.getSalary());
+                updatePosition.setTitle(position.getTitle());
+                positionRepository.save(updatePosition);
+                StringBuilder message=new StringBuilder("Position has been updated\n");
+                message.append("Title:"+updatePosition.getTitle()+"\n");
+                message.append("Job Description:"+updatePosition.getDescription()+"\n");
+                message.append("Responsibilities:"+updatePosition.getResponsibilities()+"\n");
+                message.append("Location:"+updatePosition.getLocation()+"\n");
+                message.append("Salary:"+updatePosition.getSalary()+"\n");
+                notifyJobSeekers(company,updatePosition,message.toString());
+                return "redirect:/viewjobs";
+            }
+            else
+                return "errorpage";
+
+        }
+        else
+            return "login";
     }
 
     @RequestMapping(value = "/viewjobs",method = RequestMethod.GET)
@@ -79,6 +107,7 @@ public class PositionController
             Company company_id = (Company) session.getAttribute("company");
             Company company = companyRepository.findOne((long) company_id.getId());//get company id from session
             List<Position> positionList = company.getPositions();
+            System.out.println(positionList.toString());
             model.addAttribute("positionList", positionList);
             ArrayList<Boolean> filters=new ArrayList<>();
             filters.add(false);
@@ -171,6 +200,82 @@ public class PositionController
             return "login";
     }
 
+
+    @RequestMapping(value="/position/cancel",method = RequestMethod.POST)
+    public String cancelJob(@RequestParam long id,HttpSession session)
+    {
+        if(session.getAttribute("company")!=null)
+        {
+            Company company=(Company) session.getAttribute("company");
+            Position position = positionRepository.findOne(id);
+
+            if(checkIfPositionBelongsToCompany(position,company))
+            {
+                List<Job_application> applications= position.getJobapplications();
+                List<Job_seeker> nonTerminalSeekers=new ArrayList<>();
+                for (Job_application application:applications)
+                {
+                    if(application.getStatus()==3)
+                    {
+                        return "redirect:/position/"+id;
+                    }
+                    if(application.getStatus()==0||application.getStatus()==0)
+                        nonTerminalSeekers.add(application.getJob_seeker());
+
+                }
+                position.setStatus(2);
+                positionRepository.save(position);
+                //notify non terminal applicants --should be moved to AOP
+                String message="Thank you for your application.\n" +
+                                "\n" +
+                                "Unfortunately, we have cancelled the current opening at "+company.getName()+" at this time.  We will keep your resume on file, and will let you know if there's a potential match for a future role.\n" +
+                                "\n" +
+                                "Thanks again for your interest in "+company.getName()+".  We wish you luck in your search.\n" +
+                                "\n" +
+                                "Regards,\n" +
+                                company.getName()+"  Recruiting";
+                notifyJobSeekers(company,position,message);
+                return "redirect:/position/"+id;
+            }
+            return "errorpage";
+        }
+        else
+            return "login";
+    }
+
+    private void notifyJobSeekers(Company company,Position position,String message)
+    {
+        List<Job_seeker> jobSeekers=getNonTerminalJobSeekers(position);
+        if(jobSeekers.isEmpty())
+            return;
+        else
+        {
+            try
+            {
+                for(Job_seeker seeker:jobSeekers)
+                {
+                    notificationService.sendNotificaitoin(seeker, position, company,message);
+                }
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private List<Job_seeker> getNonTerminalJobSeekers(Position position)
+    {
+        List<Job_application> applications= position.getJobapplications();
+        List<Job_seeker> nonTerminalSeekers=new ArrayList<>();
+        for(Job_application application:applications)
+        {
+            if(application.getStatus()==0||application.getStatus()==0)
+                nonTerminalSeekers.add(application.getJob_seeker());
+
+        }
+        return nonTerminalSeekers;
+    }
 
     private boolean checkIfPositionBelongsToCompany(Position position,Company company)
     {
