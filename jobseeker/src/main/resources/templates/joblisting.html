@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Job Portal</title>
+    <!-- Fav Icon -->
+    <link rel="shortcut icon" href="favicon.ico"/>
+
+    <!-- Owl carousel -->
+    <link href="/css/owl.carousel.css" rel="stylesheet"/>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Font Awesome -->
+    <link href="/css/font-awesome.css" rel="stylesheet"/>
+
+    <!-- Custom Style -->
+    <link href="/css/main.css" rel="stylesheet"/>
+
+</head>
+<body>
+<!-- Header start -->
+<div th:replace="common/header :: header"/>
+<!-- Header end -->
+
+<!-- Page Title start -->
+<div class="pageTitle">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-6">
+                <h1 class="page-heading">Job Listing</h1>
+            </div>
+            <div class="col-md-6 col-sm-6">
+                <div class="breadCrumb"><a href="#.">Home</a> / <a href="#.">Job Search</a> / <span>Job Name</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Page Title End -->
+
+<div class="listpgWraper">
+    <div class="container">
+
+        <!-- Page Title start -->
+        <div class="pageSearch">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="searchform">
+                        <div class="row">
+                            <div class="col-md-11 col-sm-3">
+                                <input type="text" class="form-control" placeholder="Job Title"/>
+                            </div>
+                            <div class="col-md-1 col-sm-2">
+                                <button class="btn"><i class="fa fa-search" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Page Title end -->
+
+        <!-- Search Result and sidebar start -->
+        <div class="row">
+            <div class="col-md-3 col-sm-6">
+                <!-- Side Bar start -->
+                <div class="sidebar">
+
+                    <!-- Jobs By City -->
+                    <div class="widget">
+                        <h4 class="widget-title">Jobs By City</h4>
+                        <ul class="optionlist">
+                            <li data-th-each="location:${allLocations}">
+                                <input hidden="hidden" name="id" th:value="${location}"/>
+                                <input th:id="'selected'+${location}" class="checkboxLocation" type="checkbox"/>
+                                <label th:for="'selected'+${location}"></label>
+                                <label th:text="${location}"></label>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Jobs By City end-->
+
+                    <!-- Top Companies -->
+                    <div class="widget">
+                        <h4 class="widget-title">Companies</h4>
+                        <ul class="optionlist">
+                            <li data-th-each="company:${allCompanies}">
+                                <input hidden="hidden" name="id" th:value="${company.id}"/>
+                                <input th:id="'selected'+${company.id}" class="checkboxCompany" type="checkbox"/>
+                                <label th:for="'selected'+${company.id}"></label>
+                                <label th:text="${company.name}"></label>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Top Companies end -->
+
+                    <!-- Salary -->
+                    <div class="widget">
+                        <h4 class="widget-title">Salary Range</h4>
+                        <ul class="optionlist">
+                            <li>
+                                <input type="checkbox" name="checkname" id="price1"/>
+                                <label for="price1"></label>
+                                0 to $100 <span>12</span></li>
+                            <li>
+                                <input type="checkbox" name="checkname" id="price2"/>
+                                <label for="price2"></label>
+                                $100 to $199 <span>41</span></li>
+                            <li>
+                                <input type="checkbox" name="checkname" id="price3"/>
+                                <label for="price3"></label>
+                                $199 to $499 <span>33</span></li>
+                            <li>
+                                <input type="checkbox" name="checkname" id="price4"/>
+                                <label for="price4"></label>
+                                $499 to $999 <span>66</span></li>
+                            <li>
+                                <input type="checkbox" name="checkname" id="price5"/>
+                                <label for="price5"></label>
+                                $999 to $4999 <span>159</span></li>
+                            <li>
+                                <input type="checkbox" name="checkname" id="price6"/>
+                                <label for="price6"></label>
+                                Above $4999 <span>865</span></li>
+                        </ul>
+                        <a href="#.">View More</a></div>
+                    <!-- Salary end -->
+
+                    <!-- button -->
+                    <div class="searchnt">
+                        <button class="btn"><i class="fa fa-search" aria-hidden="true"></i> Search Jobs</button>
+                    </div>
+                    <!-- button end-->
+                </div>
+                <!-- Side Bar end -->
+            </div>
+            <div class="col-md-3 col-sm-6 pull-right">
+
+            </div>
+            <div class="col-md-8 col-sm-12">
+                <!-- Search List -->
+                <ul class="searchList">
+                    <!-- job start -->
+                    <li data-th-each="position:${allPositions}">
+                        <div class="row">
+                            <div class="col-md-10 col-sm-8">
+                                <div class="jobimg"><img src="/images/jobs/jobimg.jpg" alt="Job Name"/></div>
+                                <div class="jobinfo">
+                                    <h3><a href="#."><span th:text="${position.title}"></span></a></h3>
+                                    <div class="location"><span th:text="${position.location}"></span></div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="col-md-2 col-sm-4">
+                                <div class="listbtn"><a href="#.">Apply Now</a></div>
+                            </div>
+                        </div>
+                        <p th:text="${position.description}"></p>
+                    </li>
+                    <!-- job end -->
+
+
+                </ul>
+
+                <!-- Pagination Start -->
+                <div class="pagiWrap">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4">
+                            <div class="showreslt">Showing 1-10</div>
+                        </div>
+                        <div class="col-md-8 col-sm-8 text-right">
+                            <ul class="pagination">
+                                <li class="active"><a href="#.">1</a></li>
+                                <li><a href="#.">2</a></li>
+                                <li><a href="#.">3</a></li>
+                                <li><a href="#.">4</a></li>
+                                <li><a href="#.">5</a></li>
+                                <li><a href="#.">6</a></li>
+                                <li><a href="#.">7</a></li>
+                                <li><a href="#.">8</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Pagination end -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Footer-->
+<div th:replace="common/footer :: footer"/>
+<!--Footer end-->
+
+<!--Copyright-->
+<div class="copyright">
+    <div class="container">
+        <div class="bttxt">Copyright &copy; 2017 Your Company Name. All Rights Reserved. Design by: <a
+                href="http://graphicriver.net/user/ecreativesol" target="_blank">eCreativeSolutions</a></div>
+    </div>
+</div>
+
+<!-- Bootstrap's JavaScript -->
+<script src="/js/jquery-2.1.4.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Owl carousel -->
+<script src="/js/owl.carousel.js"></script>
+
+<!-- Custom js -->
+<script src="/js/script.js"></script>
+</body>
+</html>
