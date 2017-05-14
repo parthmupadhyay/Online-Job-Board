@@ -24,6 +24,16 @@ public class Job_application {
     @JoinColumn(name = "jobseeker_id")
     private Job_seeker job_seeker;
 
+    private int status;//Pending, Offered, Rejected, OfferAccepted, OfferRejcted, or Cancelled
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
     public int getId() {
         return id;
     }

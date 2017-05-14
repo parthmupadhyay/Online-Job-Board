@@ -34,14 +34,15 @@
     </div>
 </div>
 
+
 <div class="listpgWraper">
-    <div class="col-md-3">
+    <div class="row">
+    <div class="col-md-3" style="padding-left: 25px">
         <div class="blogWraper">
             <ul class="blogGrid row">
                 <li class="col-md-12">
                     <div class="int" style="min-height: 300px">
                         <form method="post" th:action="@{/viewjobs}">
-
                         <h4>Open Positions</h4>
                         <input type="checkbox" name="open" id="open" th:checked="${filters[0]}"/><br/><br/>
                         <h4>Cancelled Positions</h4>
@@ -55,8 +56,7 @@
             </ul>
         </div>
     </div>
-    <div class="col-md-9">
-
+    <div class="col-md-9" style="padding-right: 25px">
         <!-- Blog start -->
         <div class="row">
             <div class="col-md-12">
@@ -79,14 +79,15 @@
                                 <span class="readmore pull-right" th:if="${position.status}=='2'">Cancelled</span>
                             </div>
                         </li>
-
                     </ul>
                 </div>
             </div>
 
         </div>
     </div>
+    </div>
 </div>
+
 <div th:replace="common/footer :: footer"/>
 <!--Footer end-->
 
