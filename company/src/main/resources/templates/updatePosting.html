@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+
+    <title>Online Job Portal - Update Job Posting</title>
+    <!-- Fav Icon -->
+    <link rel="shortcut icon" href="favicon.ico"/>
+
+    <!-- Owl carousel -->
+    <link href="/css/owl.carousel.css" rel="stylesheet"/>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Font Awesome -->
+    <link href="/css/font-awesome.css" rel="stylesheet"/>
+
+    <!-- Custom Style -->
+    <link href="/css/main.css" rel="stylesheet"/>
+</head>
+<body>
+<!-- Header start -->
+
+<div th:replace="common/header :: header"/>
+<!-- Header end -->
+
+<div class="pageTitle">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-6">
+                <h1 class="page-heading">Update Job Posting</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="listpgWraper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="userccount">
+                    <div class="formpanel">
+
+                        <!-- Job Information -->
+                        <form method="post" th:action="@{/updatePosition}" th:object="${position}">
+                            <input type="hidden" name="id" th:field="${position.id}" th:value="${position.id}"/>
+                            <h5>Position Information</h5>
+                            <div class="row">
+                                <div class="col-md-12">
+
+                                    <div class="formrow">
+                                        <h6>Job Title</h6>
+                                        <input type="text" name="title" class="form-control" placeholder="Job Title"  th:value="${position.title}"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="formrow">
+                                        <h6>Description</h6>
+                                        <textarea class="form-control" name="description" placeholder="Job Detail" th:field="${position.description}" th:value="${position.description}"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="formrow">
+                                        <h6>Responsibilities</h6>
+                                        <textarea class="form-control" name="responsibilities" placeholder="Responsibilities" th:field="${position.responsibilities}" th:value="${position.responsibilities}"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="formrow">
+                                        <h6>Job Location</h6>
+                                        <select class="form-control" name="location" th:field="${position.location}" th:value="${position.location}">
+                                            <option value="New York">New York</option>
+                                            <option value="Atlanta">Atlanta</option>
+                                            <option value="California">California</option>
+                                            <option value="Virginia">Virginia</option>
+                                            <option value="San Jose">San Jose</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="formrow">
+                                        <h6>Monthly Salary</h6>
+                                        <input type="number" class="form-control" name="salary" th:value="${position.salary}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn">Update Position</button>
+                        </form>
+                        <br/>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Footer-->
+
+<div th:replace="common/footer :: footer"/>
+<!--Footer end-->
+
+<!--Copyright-->
+<div class="copyright">
+    <div class="container">
+        <div class="bttxt">Copyright &copy; 2017 Your Company Name. All Rights Reserved. Design by: <a
+                href="http://graphicriver.net/user/ecreativesol" target="_blank">eCreativeSolutions</a></div>
+    </div>
+</div>
+
+<!-- Bootstrap's JavaScript -->
+<script src="/js/jquery-2.1.4.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Owl carousel -->
+<script src="/js/owl.carousel.js"></script>
+
+<!-- Custom js -->
+<script src="/js/script.js"></script>
+</body>
+</html>
