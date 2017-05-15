@@ -48,12 +48,14 @@
                 <div class="col-md-12">
                     <div class="searchform">
                         <div class="row">
+                            <form th:action="@{/search/query}" method="post">
                             <div class="col-md-11 col-sm-3">
-                                <input type="text" class="form-control" placeholder="Job Title"/>
+                                <input type="text" name="query" id="query" class="form-control" placeholder="Search your dream job"/>
                             </div>
                             <div class="col-md-1 col-sm-2">
-                                <button class="btn"><i class="fa fa-search" aria-hidden="true"></i></button>
+                                <button class="btn" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
                             </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -73,8 +75,8 @@
                         <ul class="optionlist">
                             <li data-th-each="location:${allLocations}">
                                 <input hidden="hidden" name="id" th:value="${location}"/>
-                                <input th:id="'selected'+${location}" class="checkboxLocation" type="checkbox"/>
-                                <label th:for="'selected'+${location}"></label>
+                                <input th:id="${location}" class="checkboxLocation" type="checkbox"/>
+                                <label th:for="${location}"></label>
                                 <label th:text="${location}"></label>
                             </li>
                         </ul>
@@ -87,49 +89,17 @@
                         <ul class="optionlist">
                             <li data-th-each="company:${allCompanies}">
                                 <input hidden="hidden" name="id" th:value="${company.id}"/>
-                                <input th:id="'selected'+${company.id}" class="checkboxCompany" type="checkbox"/>
-                                <label th:for="'selected'+${company.id}"></label>
+                                <input th:id="${company.id}" class="checkboxCompany" type="checkbox"/>
+                                <label th:for="${company.id}"></label>
                                 <label th:text="${company.name}"></label>
                             </li>
                         </ul>
                     </div>
                     <!-- Top Companies end -->
 
-                    <!-- Salary -->
-                    <div class="widget">
-                        <h4 class="widget-title">Salary Range</h4>
-                        <ul class="optionlist">
-                            <li>
-                                <input type="checkbox" name="checkname" id="price1"/>
-                                <label for="price1"></label>
-                                0 to $100 <span>12</span></li>
-                            <li>
-                                <input type="checkbox" name="checkname" id="price2"/>
-                                <label for="price2"></label>
-                                $100 to $199 <span>41</span></li>
-                            <li>
-                                <input type="checkbox" name="checkname" id="price3"/>
-                                <label for="price3"></label>
-                                $199 to $499 <span>33</span></li>
-                            <li>
-                                <input type="checkbox" name="checkname" id="price4"/>
-                                <label for="price4"></label>
-                                $499 to $999 <span>66</span></li>
-                            <li>
-                                <input type="checkbox" name="checkname" id="price5"/>
-                                <label for="price5"></label>
-                                $999 to $4999 <span>159</span></li>
-                            <li>
-                                <input type="checkbox" name="checkname" id="price6"/>
-                                <label for="price6"></label>
-                                Above $4999 <span>865</span></li>
-                        </ul>
-                        <a href="#.">View More</a></div>
-                    <!-- Salary end -->
-
                     <!-- button -->
                     <div class="searchnt">
-                        <button class="btn"><i class="fa fa-search" aria-hidden="true"></i> Search Jobs</button>
+                        <button th:id="applyFilters" class="btn"><i class="fa fa-search" aria-hidden="true"></i> Search Jobs</button>
                     </div>
                     <!-- button end-->
                 </div>
@@ -210,6 +180,6 @@
 <script src="/js/owl.carousel.js"></script>
 
 <!-- Custom js -->
-<script src="/js/script.js"></script>
+<script th:src="@{/js/script.js}"></script>
 </body>
 </html>
