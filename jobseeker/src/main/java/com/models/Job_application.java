@@ -18,6 +18,13 @@ public class Job_application {
 
     @Transient
     private MultipartFile resume_file;
+    @Transient
+    private boolean applicationExists;
+    @Transient
+    private boolean applicationNotAllowed;
+    @Transient
+    private boolean applicationEmailSent;
+
 
     private String resume_url;
 
@@ -104,5 +111,29 @@ public class Job_application {
 
     public void setJob_seeker(Job_seeker job_seeker) {
         this.jobseeker = job_seeker;
+    }
+
+    public boolean isApplicationExists() {
+        return applicationExists;
+    }
+
+    public void setApplicationExists(boolean applicationExists) {
+        this.applicationExists = applicationExists;
+    }
+
+    public boolean isApplicationNotAllowed() {
+        return applicationNotAllowed;
+    }
+
+    public void setApplicationNotAllowed(boolean applicationNotAllowed) {
+        this.applicationNotAllowed = applicationNotAllowed;
+    }
+
+    public boolean isApplicationEmailSent() {
+        return applicationEmailSent;
+    }
+
+    public void setApplicationEmailSent(boolean applicationEmailSent) {
+        this.applicationEmailSent = applicationEmailSent;
     }
 }

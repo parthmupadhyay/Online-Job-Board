@@ -6,19 +6,19 @@
     <link rel="shortcut icon" href="favicon.ico"/>
 
     <!-- Owl carousel -->
-    <link href="/css/owl.carousel.css" rel="stylesheet"/>
+    <link href="../static/css/owl.carousel.css" rel="stylesheet"/>
 
     <!-- Bootstrap -->
-    <link href="/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet"/>
 
     <!-- Font Awesome -->
-    <link href="/css/font-awesome.css" rel="stylesheet"/>
+    <link href="../static/css/font-awesome.css" rel="stylesheet"/>
 
     <!-- Custom Style -->
-    <link href="/css/main.css" rel="stylesheet"/>
+    <link href="../static/css/main.css" rel="stylesheet"/>
 
     <!-- Custom Style -->
-    <link href="/css/custom.css" rel="stylesheet"/>
+    <link href="../static/css/custom.css" rel="stylesheet"/>
 
 </head>
 <body>
@@ -107,35 +107,39 @@
     <div class="row" style="margin-bottom: -100px;">
         <div class="col-xs-8">
             <h2 class="section-headline">
-                <h2 class="section-headline">
+                <h4 class="section-headline">
                     Welcome, <span th:text="${jobseeker}? ${#strings.toUpperCase(jobseeker.first_name)} : 'Your application'"></span>
-                </h2>
+                </h4>
             </h2>
         </div>
-        <div class="col-xs-4">
-            <img src="/image/company_logo/+${company.id}+.png" class="img-responsive"/>
-        </div>
+
     </div>
-    <hr
-            style="position: absolute; width: 100%; height: 6px; background-color: #333; z-index: -1; margin-top: -80px;"/>
-    <img class="img-responsive" src="/image/wood.png"
-         style="margin-top: -75px;"/>
+
 
 
     <form action="#" th:action="@{/jobApplication/apply}"  method="post" enctype="multipart/form-data">>
         <input hidden="hidden" th:field="*{position.id}" />
+        <input hidden="hidden" th:field="*{jobseeker.id}" />
+        <input hidden="hidden" th:field="*{company.id}" />
+
+        <div role="alert"><label class="alert alert-success" th:if="${jobApplication.applicationEmailSent}">Application submitted!
+            Application E-mail has been sent successfully !</label>
+        </div>
+
+        <h3>
+            <label class="alert alert-danger" th:if="${jobApplication.applicationExists}"> You have already applied for this position.</label>
+        </h3>
+        <h3>
+            <label class="alert alert-danger" th:if="${jobApplication.applicationNotAllowed}">Hey, <span th:text="${jobseeker}? ${#strings.toUpperCase(jobseeker.first_name)} : 'Job-Seeker'"></span> ! You already applied for 5 positions.</label>
+        </h3>
+
+
+
         <div class="row" style="margin-top: 120px;">
             <div class="col-xs-3">
                 <a th:href="@{/jobListing}">Back to Job list</a><br/>
-
+                <img class="img-responsive shelf-book" th:src="@{/images/company_logo/}+${company.id}+'.png'" />
             </div>
-            <div role="alert"><label class="alert alert-success" th:if="${applicationEmailSent}">Application submitted!
-                Application E-mail has been sent successfully !</label>
-            </div>
-
-            <h3>
-                <label class="alert alert-danger" th:if="${applicationNotAllowed}">Hey, JobSeeker ! You already applied for 5 positions.</label>
-            </h3>
 
 
 
@@ -173,10 +177,7 @@
                                         <h4>Upload Resume</h4>
                                         <input type="file" id="file" name="resume_file" class="form-control"
                                                th:value="${jobApplication.resume_file}"/>
-                                        <div class="formrow">
-                                            <input type="file" id="file" name="resume_file" class="form-control"
-                                                   th:value="${jobApplication.resume_file}"/>
-                                        </div>
+
 
                                     </div>
                                 </div>
