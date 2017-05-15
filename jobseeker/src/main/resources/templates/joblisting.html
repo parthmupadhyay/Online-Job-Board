@@ -48,12 +48,14 @@
                 <div class="col-md-12">
                     <div class="searchform">
                         <div class="row">
+                            <form th:action="@{/search/query}" method="post">
                             <div class="col-md-11 col-sm-3">
-                                <input type="text" th:id="searchQuery" class="form-control" placeholder="Search your dream job"/>
+                                <input type="text" name="query" id="query" class="form-control" placeholder="Search your dream job"/>
                             </div>
                             <div class="col-md-1 col-sm-2">
-                                <button class="btn"><i class="fa fa-search" aria-hidden="true"></i></button>
+                                <button class="btn" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
                             </div>
+                            </form>
                         </div>
                     </div>
                 </div>

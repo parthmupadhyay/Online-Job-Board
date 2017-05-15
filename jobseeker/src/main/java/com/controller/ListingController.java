@@ -49,10 +49,41 @@ public class ListingController {
 
         List<Company> allCompanies = listingRepository.findDistinctCompany();
         List<String> allLocations = listingRepository.findDistinctLocation();
-        List<Position> allPositions = listingRepository.filterData(searchClass.getLocation(),searchClass.getCompany());
+        List<Position> allPositions=null;
+        List<String> searchLocation=searchClass.getLocation();
+        List<Long> searchCompany=searchClass.getCompany();
+        if(!searchLocation.isEmpty()&&!searchCompany.isEmpty())
+        {
+            allPositions = listingRepository.filterData(searchClass.getLocation(),searchClass.getCompany());
+        }
+        else if(!searchLocation.isEmpty())
+        {
+            allPositions=listingRepository.filterByLocation(searchLocation);
+        }
+        else if(!searchCompany.isEmpty())
+        {
+            allPositions=listingRepository.filterByCompany(searchCompany);
+        }
+        else
+            allPositions=listingRepository.findAll();
         session.setAttribute("allCompanies", allCompanies);
         session.setAttribute("allLocations", allLocations);
         session.setAttribute("allPositions", allPositions);
+        return "joblisting";
+    }
+
+
+    @RequestMapping(value = "/search/query",method = RequestMethod.POST)
+    public String searchJobByQuery(@RequestParam String query,HttpSession session,Model model)
+    {
+        System.out.print("Query:"+query);
+        List<Company> allCompanies = listingRepository.findDistinctCompany();
+        List<String> allLocations = listingRepository.findDistinctLocation();
+        List<Position> allPositions=listingRepository.findByQuery(query);
+
+        model.addAttribute("allCompanies", allCompanies);
+        model.addAttribute("allLocations", allLocations);
+        model.addAttribute("allPositions", allPositions);
         return "joblisting";
     }
 
