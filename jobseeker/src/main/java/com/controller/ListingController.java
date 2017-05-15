@@ -52,9 +52,11 @@ public class ListingController {
         List<Position> allPositions=null;
         List<String> searchLocation=searchClass.getLocation();
         List<Long> searchCompany=searchClass.getCompany();
+        List<String> searchQuery = searchClass.getSearch();
+        String query = searchQuery.get(0);
         if(!searchLocation.isEmpty()&&!searchCompany.isEmpty())
         {
-            allPositions = listingRepository.filterData(searchClass.getLocation(),searchClass.getCompany());
+            allPositions = listingRepository.filterData(searchClass.getLocation(),searchClass.getCompany(),query);
         }
         else if(!searchLocation.isEmpty())
         {

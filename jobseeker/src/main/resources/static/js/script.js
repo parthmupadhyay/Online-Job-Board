@@ -73,6 +73,9 @@ $(document).ready(function () {
         var search = [];
         search.push(searchQuery);
 
+        console.log(searchQuery);
+        console.log(locationList);
+        console.log(companiesList);
         /*<![CDATA[*/
         var path = /*[[@{/}]]*/'search';
         /*]]>*/
@@ -92,5 +95,48 @@ $(document).ready(function () {
         });
     });
 
+    $('#applyFilters1').click(function () {
+        var allLocations = $('.checkboxLocation');
+        var allCompanies = $('.checkboxCompany');
+        var locationList = [];
+        var companiesList = [];
+
+        for (var i = 0; i < allLocations.length; i++) {
+            if (allLocations[i].checked == true) {
+                locationList.push(allLocations[i]['id'])
+            }
+        }
+
+        for (var i = 0; i < allCompanies.length; i++) {
+            if (allCompanies[i].checked == true) {
+                companiesList.push(allCompanies[i]['id'])
+            }
+        }
+
+        var searchQuery = document.getElementById("searchQuery").value;
+        var search = [];
+        search.push(searchQuery);
+
+        console.log(searchQuery);
+        console.log(locationList);
+        console.log(companiesList);
+        /*<![CDATA[*/
+        var path = /*[[@{/}]]*/'search';
+        /*]]>*/
+
+        $.ajax({
+            type: 'POST',
+            url: path,
+            data: JSON.stringify({company: companiesList, location: locationList, search: search}),
+            contentType: 'application/json;charset=utf-8',
+            success: function (res) {
+                location.href="http://localhost:8081/joblisting"
+            },
+            error: function (res) {
+                console.log(res);
+                location.reload();
+            }
+        });
+    });
 
 });

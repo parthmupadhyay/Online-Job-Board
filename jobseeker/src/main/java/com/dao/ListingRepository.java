@@ -25,8 +25,8 @@ public interface ListingRepository extends CrudRepository<Position, Long> {
 
     List<Position> findAll();
 
-    @Query("SELECT p from Position p WHERE p.location in (:location) and p.company.id in (:company)")
-    List<Position> filterData(@Param("location") List<String> location,@Param("company") List<Long> company);
+    @Query("SELECT p from Position p WHERE p.location in (:location) and p.company.id in (:company) and (p.title like %:query% or p.company.name like %:query% or p.description like %:query% or p.location like %:query%)")
+    List<Position> filterData(@Param("location") List<String> location,@Param("company") List<Long> company,@Param("query") String query);
 
     @Query("SELECT p from Position p WHERE p.company.id in (:company)")
     List<Position> filterByCompany(@Param("company") List<Long> company);
