@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Job Portal</title>
+    <!-- Fav Icon -->
+    <link rel="shortcut icon" href="favicon.ico"/>
+
+    <!-- Owl carousel -->
+    <link href="/css/owl.carousel.css" rel="stylesheet"/>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Font Awesome -->
+    <link href="/css/font-awesome.css" rel="stylesheet"/>
+
+    <!-- Custom Style -->
+    <link href="/css/main.css" rel="stylesheet"/>
+
+    <!-- Custom Style -->
+    <link href="/css/custom.css" rel="stylesheet"/>
+
+</head>
+<body>
+<!-- Header start -->
+<div th:replace="common/header :: header"/>
+<!-- Header end -->
+
+<!-- Page Title start -->
+<div class="pageTitle">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-6">
+                <h1 class="page-heading">Job Description</h1>
+            </div>
+            <div class="col-md-6 col-sm-6">
+                <div class="breadCrumb"><a href="#.">Home</a> / <a href="#.">Job Search</a> / <span>Job Name</span>/ <span>Job Apply</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Page Title End -->
+
+<!-- page description page opens with apply open-->
+<!--
+
+<div class="jobApplication">
+
+    <div class="container">
+        <div>
+            <ol class="breadcrumb">
+                <li><a th:href="@{/jobListing}"><i class="fa fa-long-arrow-left" aria-hidden="true"></i>Go back</a></li>
+
+            </ol>
+
+        </div>
+        <h3>
+            <label class="alert alert-danger" th:if="${applicationNotAllowed}">Hey, JobSeeker ! You already applied to 5 positions.</label>
+        </h3>
+        <div class="row">
+            <div class="col-xs-3">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        &lt;!&ndash;<img th:src="@{/image/book/}+${book.id}+'.png'" class="img-responsive center-block" />&ndash;&gt;
+                        <img src="/images/jobs/jobimg.jpg" alt="Job Name"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8 col-sm-12">
+                <h3 th:text="${position.title}"></h3>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <p><strong>Title: </strong><span th:text="${position.title}"></span></p>
+                        <p><strong>Company: </strong><span th:text="${company.name}"></span></p>
+                        <p><strong>Location: </strong><span th:text="${position.location}"></span></p>
+                        <p><strong>Description: </strong><span th:text="${position.description}"></span></p>
+                        <p><strong>Resonsibilities: </strong><span th:text="${position.responsibilities}"></span></p>
+                        <p><strong>Salary: $ </strong><span th:text="${position.salary}"></span></p>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="col-md-2 col-sm-4">
+                            <div class="applybtn" th:disabled="${applicationNotAllowed}"><a th:href="@{/jobApplication/apply(position_id=${position.id},jobseeker_id=${jobseeker.id})}">Apply with Profile</a></div>
+                        </div>
+                        <div class="col-md-2 col-sm-4">
+                            <div class="applybtn" th:disabled="${applicationNotAllowed}"><a th:href="@{/jobApplication?id=}+${position.id}">Apply with Resume</a></div>
+
+                        </div>
+                        <div>
+                            <h6>Upload Resume:</h6>
+                        </div>
+                        <div>
+                            <input type="file" id="file" name="resume_url" class="form-control" th:value="${resume_url}"/>
+                        </div>
+                    </div>
+                </div>
+
+             </div>
+
+        </div>
+
+     </div>
+</div>
+
+-->
+<div class="container">
+    <div class="row" style="margin-bottom: -100px;">
+        <div class="col-xs-8">
+            <h2 class="section-headline">
+                <h2 class="section-headline">
+                    Welcome, <span th:text="${jobseeker}? ${#strings.toUpperCase(jobseeker.first_name)} : 'Your application'"></span>
+                </h2>
+            </h2>
+        </div>
+        <div class="col-xs-4">
+            <img src="/image/company_logo/+${company.id}+.png" class="img-responsive"/>
+        </div>
+    </div>
+    <hr
+            style="position: absolute; width: 100%; height: 6px; background-color: #333; z-index: -1; margin-top: -80px;"/>
+    <img class="img-responsive" src="/image/wood.png"
+         style="margin-top: -75px;"/>
+
+
+    <form action="#" th:action="@{/jobApplication/apply}"  method="post" enctype="multipart/form-data">>
+        <input hidden="hidden" th:field="*{position.id}" />
+        <div class="row" style="margin-top: 120px;">
+            <div class="col-xs-3">
+                <a th:href="@{/jobListing}">Back to Job list</a><br/>
+
+            </div>
+            <div role="alert"><label class="alert alert-success" th:if="${applicationEmailSent}">Application submitted!
+                Application E-mail has been sent successfully !</label>
+            </div>
+
+            <h3>
+                <label class="alert alert-danger" th:if="${applicationNotAllowed}">Hey, JobSeeker ! You already applied for 5 positions.</label>
+            </h3>
+
+
+
+            <div class="col-xs-9">
+                <h3 th:text="${position.title}">Job Title</h3>
+                <div class="row">
+                    <div class="col-xs-5">
+                        <h5><strong>Company: </strong><span th:text="${company.name}"></span></h5>
+
+                        <p><strong>Location: </strong><span th:text="${position.location}"></span></p>
+                        <p><strong>Description: </strong><span th:text="${position.description}"></span></p>
+                        <p><strong>Resonsibilities: </strong><span th:text="${position.responsibilities}"></span></p>
+                        <p><strong>Salary: $ </strong><span th:text="${position.salary}"></span></p>
+                    </div>
+
+                    <div class="col-xs-7">
+                        <div class="panel panel-default" style="border-width: 5px; margin-top: 20px;">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <button type="submit" class="btn btn-warning" style="color:black;border:1px solid black; padding: 10px 40px 10px 40px;margin: 10px 10px 10px 0px" name="action" value="applyByProfile">Apply using Profile</button>
+                                        <!--<div class="col-md-2 col-sm-4">
+                                            <div class="btn btn-warning" ><a th:disabled="${applicationNotAllowed}" th:href="@{/jobApplication/apply(position_id=${position.id},jobseeker_id=${jobseeker.id})}">Apply with Profile</a></div>
+                                        </div>-->
+
+                                    </div>
+                                    <div class="col-xs-6" >
+
+                                        <button type="submit" class="btn btn-warning" style="color:black;border:1px solid black; padding: 10px 40px 10px 40px;margin: 10px 10px 10px 0px;" name="action" value="applyByResume">Apply using Resume</button>
+
+                                        <!--<div class="col-md-2 col-sm-4">
+                                            <div class="btn btn-warning" ><a th:disabled="${applicationNotAllowed}" th:href="@{/jobApplication/applyResume(position_id=${position.id},jobseeker_id=${jobseeker.id})}">Apply with Resume</a></div>
+
+                                        </div>-->
+                                        <h4>Upload Resume</h4>
+                                        <input type="file" id="file" name="resume_file" class="form-control"
+                                               th:value="${jobApplication.resume_file}"/>
+                                        <div class="formrow">
+                                            <input type="file" id="file" name="resume_file" class="form-control"
+                                                   th:value="${jobApplication.resume_file}"/>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr/>
+
+            </div>
+        </div>
+    </form>
+</div>
+<!-- end of container -->
+
+
+
+<!--Footer-->
+<div th:replace="common/footer :: footer"/>
+<!--Footer end-->
+
+<!--Copyright-->
+<div class="copyright">
+    <div class="container">
+        <div class="bttxt">Copyright &copy; 2017 Your Company Name. All Rights Reserved. Design by: <a
+                href="http://graphicriver.net/user/ecreativesol" target="_blank">eCreativeSolutions</a></div>
+    </div>
+</div>
+
+<!-- Bootstrap's JavaScript -->
+<script src="/js/jquery-2.1.4.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Owl carousel -->
+<script src="/js/owl.carousel.js"></script>
+
+<!-- Custom js -->
+<script src="/js/script.js"></script>
+</body>
+</html>

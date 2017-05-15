@@ -3,6 +3,8 @@ package com.utility;
 import java.util.Locale;
 
 import com.models.Company;
+import com.models.Job_seeker;
+import com.models.Position;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
@@ -17,18 +19,37 @@ public class MailConstructor {
     @Autowired
     private Environment env;
 
-    public SimpleMailMessage constructVerificationTokenEmail(
-            String contextPath, Locale locale, String token, Company company) {
+    public SimpleMailMessage constructVerificationJobseekerTokenEmail(
+            String contextPath, Locale locale, String token, Job_seeker job_seeker) {
 
-        Long company_id = company.getId();
-        String url = contextPath + "/companyVerify?company_id=" + company_id;
+        Long jobseeker_id = job_seeker.getId();
+        String url = contextPath + "/jobseekerVerify?jobseeker_id=" + jobseeker_id;
         String message = "\n Your verification token is: " + token + "\n Please Click On the URL below and enter verification token.\n";
         SimpleMailMessage email = new SimpleMailMessage();
-        email.setTo(company.getEmail());
+        email.setTo(job_seeker.getEmail());
         email.setSubject("Job-board: Account Verification");
         email.setText(url + message);
         email.setFrom("CMPE_275");
         return email;
 
     }
+
+    public SimpleMailMessage constructApplicationSentEmail( Position position, Job_seeker job_seeker) {
+
+        Long jobseeker_id = job_seeker.getId();
+        String message = "\n Thank you for applying to  " + position.getCompany().getName() +"!.\n";
+        String msgBody = "\n Your job details are as follows:\n"+
+                            "Description:\n" + position.getDescription() +
+                            "Responsibilities:\n" + position.getResponsibilities();
+
+        SimpleMailMessage email = new SimpleMailMessage();
+        email.setTo(job_seeker.getEmail());
+        email.setSubject("Job-board: Account Verification");
+        email.setText(message + msgBody);
+        email.setFrom("CMPE_275");
+        return email;
+
+    }
+
+
 }

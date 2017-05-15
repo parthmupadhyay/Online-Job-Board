@@ -31,6 +31,7 @@ public class Company {
     private String email;
 
     private String password;
+
     private int isActivated;
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)

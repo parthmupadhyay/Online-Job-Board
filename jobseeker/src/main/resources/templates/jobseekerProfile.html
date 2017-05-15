@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><!DOCTYPE html>
+        <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+        <head>
+
+            <title>Online Job Portal</title>
+            <!-- Fav Icon -->
+            <link rel="shortcut icon" href="favicon.ico"/>
+
+            <!-- Owl carousel -->
+            <link href="/css/owl.carousel.css" rel="stylesheet"/>
+
+            <!-- Bootstrap -->
+            <link href="/css/bootstrap.min.css" rel="stylesheet"/>
+
+            <!-- Font Awesome -->
+            <link href="/css/font-awesome.css" rel="stylesheet"/>
+
+            <!-- Custom Style -->
+            <link href="/css/main.css" rel="stylesheet"/>
+        </head>
+<body>
+<!-- Header start -->
+
+<div th:replace="common/header :: header"/>
+<!-- Header end -->
+
+<div class="pageTitle">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-6">
+                <h1 class="page-heading">Registration</h1>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="listpgWraper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="userccount">
+
+                    <!--<div class="alert alert-success" role="alert"><strong>Well done!</strong> Your account successfully created.</div>
+                    <div class="alert alert-warning" role="alert"><strong>Warning!</strong> Better check yourself, you're not looking too good.</div>-->
+                    <div role="alert"><label class="alert alert-danger" th:if="${emailExists}">Email address already
+                        registered ! </label></div>
+                    <div role="alert"><label class="alert alert-success" th:if="${verificationEmailSent}">Verification
+                        E-mail has
+                        been sent successfully !</label></div>
+                    <div>
+                        <h4 align="center"> Job Seeker Registration </h4>
+                    </div>
+                    <div>
+
+                        <div id="employer" class="formpanel tab-pane fade in">
+                            <form th:action="@{/userProfile}" method="post" enctype="multipart/form-data">
+                                <div class="formrow">
+                                    <input type="text" name="name" class="form-control" placeholder="First Name"
+                                           th:value="${jobseeker.first_name}"/>
+                                </div>
+                                <div class="formrow">
+                                    <input type="text" name="website" class="form-control" placeholder="Last Name"
+                                           th:value="${jobseeker.last_name}"/>
+                                </div>
+                                <div class="formrow">
+                                    <input type="text" name="email" class="form-control" placeholder="Email"
+                                           th:value="${jobseeker.email}"/>
+                                </div>
+                                <div class="formrow">
+                                    <input type="password" name="password" class="form-control" placeholder="Password"
+                                           th:value="${jobseeker.password}"/>
+                                </div>
+                                <div class="formrow">
+                                    <input type="password" name="cpass" class="form-control"
+                                           placeholder="Confirm Password"/>
+                                </div>
+
+                                <div class="formrow">
+                                    <input type="text" name="hq_address" class="form-control"
+                                           placeholder="Introduction" th:value="${jobseeker.introduction}"/>
+                                </div>
+
+                                <div class="formrow">
+                                    <input type="text" name="description" class="form-control"
+                                           placeholder="Work Experience" th:value="${jobseeker.work_exp}"/>
+                                </div>
+
+                                <div class="formrow">
+                                    <input type="text" name="description" class="form-control"
+                                           placeholder="Education th:value="${jobseeker.education}"/>
+                                </div>
+
+                                <div class="formrow">
+                                    <input type="text" name="description" class="form-control"
+                                           placeholder="Skills" th:value="${jobseeker.skills}"/>
+                                </div>
+
+                                <div class="formrow">
+                                    <h6>Upload Profile Picture:</h6>
+                                </div>
+
+                                <div class="formrow">
+                                    <input type="file" id="file" name="logo_url" class="form-control"
+                                           th:value="${jobseeker.profilePic}"/>
+                                </div>
+
+                                <button type="submit" class="btn" >Register</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="newuser"><i class="fa fa-user" aria-hidden="true"></i> Already a Member? <a th:href="@{/}">Login
+                        Here</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Footer-->
+
+<div th:replace="common/footer :: footer"/>
+<!--Footer end-->
+
+<!--Copyright-->
+<div class="copyright">
+    <div class="container">
+        <div class="bttxt">Copyright &copy; 2017 Your Company Name. All Rights Reserved. Design by: <a
+                href="http://graphicriver.net/user/ecreativesol" target="_blank">eCreativeSolutions</a></div>
+    </div>
+</div>
+
+<!-- Bootstrap's JavaScript -->
+<script src="/js/jquery-2.1.4.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Owl carousel -->
+<script src="/js/owl.carousel.js"></script>
+
+<!-- Custom js -->
+<script src="/js/script.js"></script>
+</body>
+</html></title>
+</head>
+<body>
+
+</body>
+</html>

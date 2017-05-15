@@ -1,0 +1,11 @@
+.applybtn{
+    background: #00a2ff;
+    display: block;
+    border-radius: 0;
+    width: 100%;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 10px 15px;
+    text-align: center;
+}

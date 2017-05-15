@@ -1,6 +1,9 @@
 package com.models;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.persistence.*;
+import java.sql.Blob;
 import java.util.List;
 
 /**
@@ -19,15 +22,25 @@ public class Job_seeker {
     private String email;
 
     private String password;
-    private String first_name;
-    private String last_name;
-    private String introduction;
-    private String work_exp;
-    private String education;
-    private String skills;
-    private boolean isActivated;
 
-    @OneToMany(mappedBy = "job_seeker",cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    private String first_name;
+
+    private String last_name;
+
+    private String introduction;
+
+    private String work_exp;
+
+    private String education;
+
+    private String skills;
+
+    private int isActivated;
+
+    @Transient
+    private MultipartFile profilePic;
+
+    @OneToMany(mappedBy = "jobseeker",cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Job_application> jobapplications;
 
     public String getEmail() {
@@ -54,11 +67,11 @@ public class Job_seeker {
         this.education = education;
     }
 
-    public boolean isActivated() {
+    public int isActivated() {
         return isActivated;
     }
 
-    public void setActivated(boolean activated) {
+    public void setActivated(int activated) {
         isActivated = activated;
     }
 
@@ -124,5 +137,21 @@ public class Job_seeker {
 
     public void setSkills(String skills) {
         this.skills = skills;
+    }
+
+    public int getIsActivated() {
+        return isActivated;
+    }
+
+    public void setIsActivated(int isActivated) {
+        this.isActivated = isActivated;
+    }
+
+    public MultipartFile getProfilePic() {
+        return profilePic;
+    }
+
+    public void setProfilePic(MultipartFile profilePic) {
+        this.profilePic = profilePic;
     }
 }
