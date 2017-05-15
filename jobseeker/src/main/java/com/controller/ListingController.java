@@ -3,13 +3,23 @@ package com.controller;
 import com.dao.ListingRepository;
 import com.models.Company;
 import com.models.Position;
+import com.models.SearchClass;
+import com.sun.deploy.net.HttpResponse;
 import javafx.geometry.Pos;
+import org.apache.catalina.Session;
+import org.json.JSONObject;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -28,9 +38,30 @@ public class ListingController {
         List<Company> allCompanies = listingRepository.findDistinctCompany();
         List<Position> allPositions = listingRepository.findAll();
         List<String> allLocations = listingRepository.findDistinctLocation();
-        model.addAttribute("allCompanies",allCompanies);
-        model.addAttribute("allPositions",allPositions);
-        model.addAttribute("allLocations",allLocations);
+        model.addAttribute("allCompanies", allCompanies);
+        model.addAttribute("allPositions", allPositions);
+        model.addAttribute("allLocations", allLocations);
+        return "joblisting";
+    }
+
+    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    public String searchJobListing(Model model, HttpResponse response, @RequestBody SearchClass searchClass, final RedirectAttributes redirectAttributes, HttpSession session) throws Exception {
+
+        List<Company> allCompanies = listingRepository.findDistinctCompany();
+        List<String> allLocations = listingRepository.findDistinctLocation();
+        List<Position> allPositions = listingRepository.filterData(searchClass.getLocation(),searchClass.getCompany());
+        session.setAttribute("allCompanies", allCompanies);
+        session.setAttribute("allLocations", allLocations);
+        session.setAttribute("allPositions", allPositions);
+        return "joblisting";
+    }
+
+    @RequestMapping(value = "/joblisting")
+    public String jobListingAfterFilters(Model model, HttpSession session) {
+
+        model.addAttribute("allCompanies", session.getAttribute("allCompanies"));
+        model.addAttribute("allLocations", session.getAttribute("allLocations"));
+        model.addAttribute("allPositions", session.getAttribute("allPositions"));
         return "joblisting";
     }
 }
