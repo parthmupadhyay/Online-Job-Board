@@ -61,46 +61,46 @@
                     <div>
 
                         <div id="employee" class="formpanel tab-pane fade in">
-                            <form th:action="@{/jobseekerProfile/edit}" th:objectmethod="post" enctype="multipart/form-data">
-                                <input hidden="hidden" name="jobseeker.id" th:value="${jobseeker.id}"/>
-                                <input hidden="hidden" name="jobseeker.password" th:value="${jobseeker.password}"/>
+                            <form th:action="@{/jobseekerProfile/edit}" method="post" enctype="multipart/form-data">
+                                <input hidden="hidden" name="id" th:value="${jobseeker.id}"/>
+                                <input hidden="hidden" name="password" th:value="${jobseeker.password}"/>
                                 <div class="formrow">
-                                    <h6 >Your username is <span th:text="${jobseeker.email}"></span></h6>
+                                    <h6 >Your username is <span name="email" th:text="${jobseeker.email}"></span></h6>
                                 </div>
 
                                 <div class="formrow">
                                     <label>First Name</label>
-                                    <input type="text" name="name" class="form-control" placeholder="First Name"
+                                    <input type="text" name="first_name" class="form-control" placeholder="First Name"
                                            th:value="${jobseeker.first_name}"/>
                                 </div>
                                 <div class="formrow">
                                     <label>Last Name</label>
-                                    <input type="text" name="website" class="form-control" placeholder="Last Name"
+                                    <input type="text" name="last_name" class="form-control" placeholder="Last Name"
                                            th:value="${jobseeker.last_name}"/>
                                 </div>
 
 
                                 <div class="formrow">
                                     <label>Introduction</label>
-                                    <input type="text" name="hq_address" class="form-control"
+                                    <input type="text" name="introduction" class="form-control"
                                            placeholder="Introduction" th:value="${jobseeker.introduction}"/>
                                 </div>
 
                                 <div class="formrow">
                                     <label>Work Experience</label>
-                                    <input type="text" name="description" class="form-control"
+                                    <input type="text" name="work_exp" class="form-control"
                                            placeholder="Work Experience" th:value="${jobseeker.work_exp}"/>
                                 </div>
 
                                 <div class="formrow">
                                     <label>Education</label>
-                                    <input type="text" name="description" class="form-control"
+                                    <input type="text" name="education" class="form-control"
                                            placeholder="Education" th:value="${jobseeker.education}"/>
                                 </div>
 
                                 <div class="formrow">
                                     <label>Skills</label>
-                                    <input type="text" name="description" class="form-control"
+                                    <input type="text" name="skills" class="form-control"
                                            placeholder="Skills" th:value="${jobseeker.skills}"/>
                                 </div>
 
@@ -109,7 +109,7 @@
                                 </div>
 
                                 <div class="formrow">
-                                    <input type="file" id="file" name="logo_url" class="form-control"
+                                    <input type="file" id="file" name="profilePic" class="form-control"
                                            th:value="${jobseeker.profilePic}"/>
                                 </div>
 

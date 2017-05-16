@@ -1,5 +1,6 @@
 package com.controller;
 
+import com.dao.CompanyRepository;
 import com.dao.JobSeekerRepository;
 import com.dao.JobSeekerTokenRepository;
 import com.models.Company;
@@ -42,6 +43,9 @@ public class JobseekerProfileController {
     JobSeekerRepository jobseekerRepository;
 
     @Autowired
+    CompanyRepository companyRepository;
+
+    @Autowired
     private MailConstructor mailConstructor;
 
     @Autowired
@@ -68,7 +72,7 @@ public class JobseekerProfileController {
         try {
             jobseeker.setActivated(0);
 
-            if (jobseekerRepository.findByEmail(jobseeker.getEmail()) != null) {
+            if (jobseekerRepository.findByEmail(jobseeker.getEmail()) != null || companyRepository.findByEmail(jobseeker.getEmail()) != null) {
                 model.addAttribute("emailExists", true);
                 return "jobseekerProfile";
             }
@@ -148,6 +152,7 @@ public class JobseekerProfileController {
 
         jobseekerRepository.save(jobseeker_);
 
+        //update the page and session with latest data
         session.setAttribute("jobseeker",jobseeker_);
         log.debug("jobseeker  updated:"+jobseeker.getId());
         model.addAttribute("jobseeker", jobseeker);
@@ -172,6 +177,15 @@ public class JobseekerProfileController {
             Job_seeker jobseeker = jobseekerRepository.findOne(jobseeker_id);
             jobseeker.setIsActivated(1);
             jobseekerRepository.save(jobseeker);
+
+            String sub = "Job-board: Account Verified ";
+            String primMsg = "Dear JobSeeker,\n"+"\nYour job board account is verified.\n\n";
+            String appUrl = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath()+"/";
+            String secMsg = "You can login at link provided below to proceed with job application.\n\n "+appUrl ;
+            SimpleMailMessage new_email = mailConstructor.constructApplicationSentEmail(sub,primMsg,secMsg,jobseeker);
+
+            mailSender.send(new_email);
+
             return "login";
         }
 

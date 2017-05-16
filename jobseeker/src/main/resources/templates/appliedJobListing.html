@@ -67,12 +67,8 @@
                 Application cancellation E-mail has been sent successfully !</label>
             </div>
 
-            <h3>
-                <label class="alert alert-danger" th:if="${notCancelled}"> <span th:text="${notCancelled}">cannot be cancelled.</span></label>
-            </h3>
-            <h3>
-                <label class="alert alert-danger" th:if="${notRejected}"> <span th:text="${notRejected}">cannot be rejected.</span></label>
-            </h3>
+            <label class="alert alert-danger" th:if="${notCancelled}">Applications with ids <span th:text="${notCancelled}"></span>cannot be cancelled.</label>
+            <label class="alert alert-danger" th:if="${notRejected}"> Applications with ids <span th:text="${notRejected}"></span>cannot be rejected.</label>
 
 
                 <div class="row">
@@ -104,14 +100,14 @@
                                     </div>
                                     <div class="clearfix"></div>
                                 </div>
-                                <div class="col-md-3 col-sm-12 pull-right"> <!--class="col-md-2 col-sm-4"-->
+                                <div class="col-md-2 col-sm-12 pull-right"> <!--class="col-md-2 col-sm-4"-->
                                     <!--<div class="listbtn"><a th:href="@{/jobApplication?id=${position.id}">Apply Now</a></div> -->
-                                    <h4 th:if="*{application.status==0}" style="color: yellow"><span>Pending</span></h4>
-                                    <h4 th:if="*{application.status==1}" style="color: green"><span>Offered</span></h4>
-                                    <h4 th:if="*{application.status==2}" style="color: red"><span>Rejected</span></h4>
-                                    <h4 th:if="*{application.status==3}" style="color: green"><span>OfferAccepted</span></h4>
-                                    <h4 th:if="*{application.status==4}" style="color: red"><span>OfferRejected</span></h4>
-                                    <h4 th:if="*{application.status==5}" style="color: blue"><span>Cancelled</span></h4>
+                                    <h4 th:if="*{application.status==0}" style="color: yellow; margin-top: 20px;"><span>Pending</span></h4>
+                                    <h4 th:if="*{application.status==1}" style="color: green; margin-top: 20px;"><span>Offered</span></h4>
+                                    <h4 th:if="*{application.status==2}" style="color: red; margin-top: 20px;"><span>Rejected</span></h4>
+                                    <h4 th:if="*{application.status==3}" style="color: green; margin-top: 20px;"><span>OfferAccepted</span></h4>
+                                    <h4 th:if="*{application.status==4}" style="color: red; margin-top: 20px;"><span>OfferRejected</span></h4>
+                                    <h4 th:if="*{application.status==5}" style="color: blue; margin-top: 20px;"><span>Cancelled</span></h4>
                                 </div>
                             </div>
                             <p th:text="${application.position.description}"></p>

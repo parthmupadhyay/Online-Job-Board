@@ -179,7 +179,7 @@ public class JobApplicationController {
 
 
 
-        String message = "\n Thank you for applying to  " + position.getCompany().getName() +"!.\n";
+        String message = "\n Thank you for applying to  " + position.getCompany().getName() +"!.\n\n";
         String sub = "Job-board:Job Applied";
         sendApplicationNotification(sub, message, position,jobseeker);
         model.addAttribute("applicationEmailSent",true);
@@ -216,14 +216,15 @@ public class JobApplicationController {
         switch(action) {
             case "reject":
                 log.debug("reject ");
-                if(selectedApplications.length > 1) {
+                if(selectedApplications.length > 0) {
                     List<String> notRejected = performRejection(selectedApplications);
-                    if (notRejected.size() > 1) {
+                    if (notRejected.size() > 0) {
                         model.addAttribute("notRejected", String.join(",", notRejected));
                     }
 
-                    String primaryMsg = "Thank you for your time. Best wishes for your future. Please feel free to contact again whenever new position fits you. ";
-                    String sub = "JobPortal: Application Rejected";
+                    String primaryMsg = "Thank you for your time. Best wishes for your future. " +
+                            "Please feel free to contact again whenever new position fits you.\n\n ";
+                    String sub = "JobPortal: Application Offer Rejected";
                     sendApplciationRejectionMail(sub, primaryMsg, selectedApplications, notRejected, jobseeker);
                     model.addAttribute("rejectionMailSent", true);
 
@@ -231,13 +232,13 @@ public class JobApplicationController {
                 break;
             case "cancel":
                 log.debug("cancel");
-                if(selectedApplications.length > 1) {
+                if(selectedApplications.length > 0) {
                     List<String> notCancelled = performCancellation(selectedApplications);
-                    if (notCancelled.size() > 1) {
+                    if (notCancelled.size() > 0) {
                         model.addAttribute("notCancelled", String.join(",", notCancelled));
                     }
-                    String primaryMsg = "Thank you for your response. We hope to see you again. Best wishes! ";
-                    String sub = "JobPortal: Application Offer Rejected";
+                    String primaryMsg = "Thank you for your response. We hope to see you again. Best wishes!\n\n ";
+                    String sub = "JobPortal: Application Cancelled";
                     sendApplciationCancellationMail(sub, primaryMsg, selectedApplications, notCancelled, jobseeker);
                     model.addAttribute("cancellationMailSent", true);
                 }
@@ -290,7 +291,7 @@ public class JobApplicationController {
     }
 
     private void sendApplciationRejectionMail(String sub, String primaryMsg , String[] selectedIds,  List<String> notSelectedIds , Job_seeker jobSeeker){
-        String secondaryMsg = (notSelectedIds.size() > 1 )? "\n Applications with application id :"
+        String secondaryMsg = (notSelectedIds.size() > 0 )? "\n Applications with application id :"
                 + String.join(",",notSelectedIds) +" cannot be rejected.\n": "";
         for(String id : selectedIds){
             if(!notSelectedIds.contains(id)){
@@ -303,7 +304,7 @@ public class JobApplicationController {
     }
 
     private void sendApplciationCancellationMail(String sub, String primaryMsg , String[] selectedIds,  List<String> notSelectedIds , Job_seeker jobSeeker){
-        String secondaryMsg = (notSelectedIds.size() > 1 )? "\n Applications with application id :"
+        String secondaryMsg = (notSelectedIds.size() > 0 )? "\n Applications with application id :"
                 + String.join(",",notSelectedIds) +" cannot be cancelled.\n": "";
         for(String id : selectedIds){
             if(!notSelectedIds.contains(id)){
@@ -317,9 +318,9 @@ public class JobApplicationController {
 
     private void sendApplicationNotification(String sub ,String primaryMsg, Position position, Job_seeker jobseeker){
 
-        String secondaryMsg = "\n Your job details are as follows:\n"+
-                "Description:\n" + position.getDescription() +
-                "Responsibilities:\n" + position.getResponsibilities();
+        String secondaryMsg = "\nYour job details are as follows:\n"+
+                "\nDescription:\n" + position.getDescription() +
+                "\nResponsibilities:\n" + position.getResponsibilities();
         SimpleMailMessage new_email = mailConstructor.constructApplicationSentEmail(sub,primaryMsg, secondaryMsg , jobseeker);
 
         mailSender.send(new_email);
