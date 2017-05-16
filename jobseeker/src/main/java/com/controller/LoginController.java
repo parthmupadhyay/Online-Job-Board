@@ -37,12 +37,14 @@ public class LoginController {
                                Model model, HttpSession session) {
 
         Job_seeker jobseeker = jobSeekerRepository.findByEmail(email);
-        if (jobseeker.getPassword().equals(password)) {
-            session.setAttribute("jobseeker",jobseeker);
-            return "redirect:/";
+        if(jobseeker != null) {
+            if (jobseeker.getPassword().equals(password)) {
+                session.setAttribute("jobseeker", jobseeker);
+                return "redirect:/jobListing";
+            }
         }
         model.addAttribute("wrongCredentials",true);
-        return "login";
+        return "redirect:/";
     }
 
 }

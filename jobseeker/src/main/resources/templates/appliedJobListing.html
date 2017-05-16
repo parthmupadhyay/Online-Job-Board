@@ -55,8 +55,8 @@
 
         <div class="row">
             <div class="col-md-2 col-sm-4" style="margin: 20px 20px 20px 20px;">
-                <a class="btn btn-danger" th:href="@{/}">Cancel</a>
-                <a class="btn btn-danger" th:href="@{/}">Reject</a>
+                <a class="btn btn-danger" th:href="@{/jobApplication/changeStatus}" onclick="cancelSelectedApplication">Cancel</a>
+                <a class="btn btn-danger" th:href="@{/jobApplication/changeStatus}">Reject</a>
             </div>
         </div>
 
@@ -70,8 +70,8 @@
                     <li data-th-each="application:${allApplications}">
 
                         <div class="row">
-                            <div class="col-xs-6">
-                                <input type="checkbox" name="app" th:value="${application.id}"/>
+                            <div class="col-md-2 col-sm-12 pull-right">
+                                <input type="checkbox" name="app" th:value="${application}" />
                             </div>
                             <div class="col-md-10 col-sm-8">
                                 <div class="jobimg"><img src="/images/jobs/jobimg.jpg" alt="Job Name"/></div>

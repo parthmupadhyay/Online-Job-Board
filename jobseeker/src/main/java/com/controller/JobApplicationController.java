@@ -3,6 +3,7 @@ package com.controller;
 import com.dao.JobApplicationRepository;
 import com.dao.JobSeekerRepository;
 import com.dao.PositionRepository;
+import com.daoImpl.JobApplicationRepositoryImpl;
 import com.models.Company;
 import com.models.Job_application;
 import com.models.Job_seeker;
@@ -18,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
@@ -44,6 +46,9 @@ public class JobApplicationController {
 
     @Autowired
     JobApplicationRepository jobApplicationRepository;
+
+//    @Autowired
+//    JobApplicationRepositoryImpl jobApplicationRepositoryImpl;
 
     @Autowired
     private MailConstructor mailConstructor;
@@ -127,7 +132,8 @@ public class JobApplicationController {
         jobseeker.setJobapplications(appliedJobs);
         jobSeekerRepository.save(jobseeker);
 
-        sendApplicationNotification(position,jobseeker);
+        String message = "\n Thank you for applying to  " + position.getCompany().getName() +"!.\n";
+        sendApplicationNotification(message, position,jobseeker);
         model.addAttribute("applicationEmailSent",true);
         log.debug("------------------end");
          return "redirect:/jobListing";
@@ -173,7 +179,8 @@ public class JobApplicationController {
         jobseeker.setJobapplications(appliedJobs);
         jobSeekerRepository.save(jobseeker);
 
-       sendApplicationNotification(position,jobseeker);
+        String message = "\n Thank you for applying to  " + position.getCompany().getName() +"!.\n";
+       sendApplicationNotification(message, position,jobseeker);
         model.addAttribute("applicationEmailSent",true);
         log.debug("------------------end");
         return "redirect:/jobListing";
@@ -186,15 +193,50 @@ public class JobApplicationController {
         Job_seeker jobseeker = jobSeekerRepository.findOne(new Long(1)); //testing
         //Job_seeker jobseeker = (Job_seeker) session.getAttribute("jobseeker");
         List<Job_application> allApplications = jobApplicationRepository.findAllByJobseeker(jobseeker);
+        List<Job_application> selectedApplications = new ArrayList<>();
         model.addAttribute("allApplications",allApplications);
         model.addAttribute("jobseeker", jobseeker);
+        model.addAttribute("selectedApplications",selectedApplications);
+        return "appliedJobListing";
+    }
+
+    @RequestMapping(value="/jobApplication/changeStatus" , method=RequestMethod.POST)
+    public String cancelOrrejectApplication(HttpSession session, Model model,
+                                            @RequestParam(value="action", required=true) String action,
+                                            @ModelAttribute("allApplications") List<Job_application> allApplications){
+
+        log.debug("-------------inside cancel or reject jobapplcaition");
+        log.debug("appcliation selected size:"+allApplications.size());
+        switch(action) {
+            case "reject":
+                log.debug("reject ");
+                // for each selected jobapplicaiton
+                //check if the status is offered only then reject the applciation
+                //set  new status and save the applciation
+                //send the mail saying u hv rejected the offer
+                String primaryMsg = "Thank you for your time. Best wishes for your future. Please feel free to contact again whenever new position fits you. ";
+                //Position position = positionRepository.findOne(jobApplication.getPosition().getId());
+                //Job_seeker jobseeker = jobSeekerRepository.findOne(jobApplication.getPosition().getId());
+                //sendApplicationNotification(primaryMsg,position,jobseeker);
+                break;
+            case "cancel":
+                log.debug("cancel");
+                // for each selected jobapplicaiton
+                //check if the status is pending only then cancel the applciation
+                //set  new status and save the applciation
+                break;
+
+            default:
+                // do stuff
+                break;
+        }
         return "appliedJobListing";
     }
 
 
-    private void sendApplicationNotification(Position position, Job_seeker jobseeker){
+    private void sendApplicationNotification(String primaryMsg, Position position, Job_seeker jobseeker){
 
-        SimpleMailMessage new_email = mailConstructor.constructApplicationSentEmail(position , jobseeker);
+        SimpleMailMessage new_email = mailConstructor.constructApplicationSentEmail(primaryMsg, position , jobseeker);
 
         mailSender.send(new_email);
 

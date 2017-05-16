@@ -34,18 +34,18 @@ public class MailConstructor {
 
     }
 
-    public SimpleMailMessage constructApplicationSentEmail( Position position, Job_seeker job_seeker) {
+    public SimpleMailMessage constructApplicationSentEmail( String primaryMsg, Position position, Job_seeker job_seeker) {
 
         Long jobseeker_id = job_seeker.getId();
-        String message = "\n Thank you for applying to  " + position.getCompany().getName() +"!.\n";
-        String msgBody = "\n Your job details are as follows:\n"+
+
+        String secondaryMsg = "\n Your job details are as follows:\n"+
                             "Description:\n" + position.getDescription() +
                             "Responsibilities:\n" + position.getResponsibilities();
 
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(job_seeker.getEmail());
         email.setSubject("Job-board: Account Verification");
-        email.setText(message + msgBody);
+        email.setText(primaryMsg + secondaryMsg);
         email.setFrom("CMPE_275");
         return email;
 
