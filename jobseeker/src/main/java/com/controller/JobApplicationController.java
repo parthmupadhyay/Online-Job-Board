@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -188,10 +189,12 @@ public class JobApplicationController {
     @RequestMapping(value="/allApplications" , method=RequestMethod.GET)
     public String getAllApplications(HttpSession session, Model model){
 
+        log.debug("----------inside getallapplciations");
         Job_seeker jobseeker = jobSeekerRepository.findOne(new Long(1)); //testing
         //Job_seeker jobseeker = (Job_seeker) session.getAttribute("jobseeker");
         List<Job_application> allApplications = jobApplicationRepository.findAllByJobseeker(jobseeker);
-        List<Job_application> selectedApplications = new ArrayList<>();
+        log.debug("all applications size:"+allApplications.size());
+        List<Long> selectedApplications = new ArrayList<>();
         model.addAttribute("allApplications",allApplications);
         model.addAttribute("jobseeker", jobseeker);
         model.addAttribute("selectedApplications",selectedApplications);
@@ -201,40 +204,114 @@ public class JobApplicationController {
     @RequestMapping(value="/jobApplication/changeStatus" , method=RequestMethod.POST)
     public String cancelOrRejectApplication(HttpSession session, Model model,
                                             @RequestParam(value="action", required=true) String action,
-                                            @ModelAttribute("allApplications") List<Job_application> allApplications){
+                                           @RequestParam(value="id") String[] selectedApplications,
+                                            @RequestParam("jobseeker.id") Long jobseeker_id){
 
         log.debug("-------------inside cancel or reject jobapplcaition");
-        log.debug("appcliation selected size:"+allApplications.size());
+        log.debug("jobseeker id is :"+jobseeker_id);
+        log.debug("appcliation selected size:"+selectedApplications.length);
+        Job_seeker jobseeker = jobSeekerRepository.findOne(jobseeker_id);
         switch(action) {
             case "reject":
                 log.debug("reject ");
-                // for each selected jobapplicaiton
-                //check if the status is offered only then reject the applciation
-                //set  new status and save the applciation
-                //send the mail saying u hv rejected the offer
-                String primaryMsg = "Thank you for your time. Best wishes for your future. Please feel free to contact again whenever new position fits you. ";
-                //Position position = positionRepository.findOne(jobApplication.getPosition().getId());
-                //Job_seeker jobseeker = jobSeekerRepository.findOne(jobApplication.getPosition().getId());
-                //sendApplicationNotification(primaryMsg,position,jobseeker);
+                List<String> notRejected = performRejection(selectedApplications);
+                if(notRejected.size()> 1){
+                    model.addAttribute("notRejected",String.join(",",notRejected));
+                }
+
+                    String primaryMsg = "Thank you for your time. Best wishes for your future. Please feel free to contact again whenever new position fits you. ";
+                    String sub = "JobPortal: Application Rejected";
+                    sendApplciationRejectionMail(sub, primaryMsg, selectedApplications, notRejected, jobseeker);
+                    model.addAttribute("rejectionMailSent", true);
+
+
                 break;
             case "cancel":
                 log.debug("cancel");
-                // for each selected jobapplicaiton
-                //check if the status is pending only then cancel the applciation
-                //set  new status and save the applciation
+                List<String> notCancelled = performCancellation(selectedApplications);
+                if(notCancelled.size()> 1){
+                    model.addAttribute("notCancelled",String.join(",",notCancelled));
+                }
+                    primaryMsg = "Thank you for your response. We hope to see you again. Best wishes! ";
+                    sub = "JobPortal: Application Offer Rejected";
+                    sendApplciationCancellationMail(sub, primaryMsg, selectedApplications, notCancelled, jobseeker);
+                    model.addAttribute("cancellationMailSent", true);
+
                 break;
 
             default:
                 // do stuff
+
                 break;
         }
-        return "appliedJobListing";
+        return "redirect:/allApplications";
     }
 
 
+    //-------------------------------------private methods-------------------------------------------------------------------
+
+    //return error if invalid or success if all can be cancelled
+    private List<String> performCancellation(String[] selectedApplications) {
+        List<String> notCancelled = new ArrayList<String>();
+        for(String id: selectedApplications){
+            Job_application jobApplication = jobApplicationRepository.findOne(Long.parseLong(id));
+            if(jobApplication.getStatus() != 0){
+                notCancelled.add(id);
+            }else{
+                jobApplication.setStatus(5);//cancelled
+                jobApplicationRepository.save(jobApplication);
+            }
+        }
+        return notCancelled;
+    }
+
+    //return error if invalid or success if all can be cancelled
+    private List<String> performRejection(String[] selectedApplications) {
+        List<String> notCancelled = new ArrayList<String>();
+        for(String id: selectedApplications){
+            Job_application jobApplication = jobApplicationRepository.findOne(Long.parseLong(id));
+            if(jobApplication.getStatus() != 1){
+                notCancelled.add(id);
+            }else{
+                jobApplication.setStatus(4);//cancelled
+                jobApplicationRepository.save(jobApplication);
+            }
+        }
+        return notCancelled;
+    }
+
+    private void sendApplciationRejectionMail(String sub, String primaryMsg , String[] selectedIds,  List<String> notSelectedIds , Job_seeker jobSeeker){
+        String secondaryMsg = (notSelectedIds.size() > 1 )? "\n Applications with application id :"
+                + String.join(",",notSelectedIds) +" cannot be rejected.\n": "";
+        for(String id : selectedIds){
+            if(!notSelectedIds.contains(id)){
+                secondaryMsg += "\n Offers with Application id "+id+" rejected.\n";
+            }
+        }
+        SimpleMailMessage new_email = mailConstructor.constructApplicationSentEmail(sub,primaryMsg, secondaryMsg ,jobSeeker);
+
+        mailSender.send(new_email);
+    }
+
+    private void sendApplciationCancellationMail(String sub, String primaryMsg , String[] selectedIds,  List<String> notSelectedIds , Job_seeker jobSeeker){
+        String secondaryMsg = (notSelectedIds.size() > 1 )? "\n Applications with application id :"
+                + String.join(",",notSelectedIds) +" cannot be cancelled.\n": "";
+        for(String id : selectedIds){
+            if(!notSelectedIds.contains(id)){
+                secondaryMsg += "\n Applciation id "+id+" cancelled.\n";
+            }
+        }
+        SimpleMailMessage new_email = mailConstructor.constructApplicationSentEmail(sub,primaryMsg, secondaryMsg ,jobSeeker);
+
+        mailSender.send(new_email);
+    }
+
     private void sendApplicationNotification(String sub ,String primaryMsg, Position position, Job_seeker jobseeker){
 
-        SimpleMailMessage new_email = mailConstructor.constructApplicationSentEmail(sub,primaryMsg, position , jobseeker);
+        String secondaryMsg = "\n Your job details are as follows:\n"+
+                "Description:\n" + position.getDescription() +
+                "Responsibilities:\n" + position.getResponsibilities();
+        SimpleMailMessage new_email = mailConstructor.constructApplicationSentEmail(sub,primaryMsg, secondaryMsg , jobseeker);
 
         mailSender.send(new_email);
 

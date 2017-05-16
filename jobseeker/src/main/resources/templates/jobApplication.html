@@ -20,6 +20,10 @@
     <!-- Custom Style -->
     <link href="/css/custom.css" rel="stylesheet"/>
 
+    <!-- include sweetalert2 css library -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/sweetalert2/5.3.5/sweetalert2.min.css" />
+
+
 </head>
 <body>
 <!-- Header start -->
@@ -101,13 +105,15 @@
                             <div class="panel-body">
                                 <div class="row">
                                     <div class="col-xs-6">
-                                        <button type="submit" class="btn btn-warning" style="color:black;border:1px solid black; padding: 10px 40px 10px 40px;margin: 10px 10px 10px 0px" name="action" value="applyByProfile">Apply using Profile</button>
+                                        <button type="submit" class="btn btn-warning" style="color:black;border:1px solid black; padding: 10px 40px 10px 40px;margin: 10px 10px 10px 0px"
+                                                name="action" value="applyByProfile" th:onclick="${'javascript:applyJob();'}">Apply using Profile</button>
                                         <!--<div class="col-md-2 col-sm-4">
                                             <div class="btn btn-warning" ><a th:disabled="${applicationNotAllowed}" th:href="@{/jobApplication/apply(position_id=${position.id},jobseeker_id=${jobseeker.id})}">Apply with Profile</a></div>
                                         </div>-->
                                     </div>
                                     <div class="col-xs-6">
-                                        <button type="submit" class="btn btn-warning" style="color:black;border:1px solid black; padding: 10px 40px 10px 40px;margin: 10px 10px 10px 0px;" name="action" value="applyByResume">Apply using Resume</button>
+                                        <button type="submit" class="btn btn-warning" style="color:black;border:1px solid black; padding: 10px 40px 10px 40px;margin: 10px 10px 10px 0px;"
+                                                name="action" value="applyByResume" th:onclick="${'javascript:applyJob();'}">Apply using Resume</button>
                                         <!--<div class="col-md-2 col-sm-4">
                                             <div class="btn btn-warning" ><a th:disabled="${applicationNotAllowed}" th:href="@{/jobApplication/applyResume(position_id=${position.id},jobseeker_id=${jobseeker.id})}">Apply with Resume</a></div>
                                         </div>-->
@@ -145,6 +151,7 @@
 
 <!-- Bootstrap's JavaScript -->
 <script src="/js/jquery-2.1.4.min.js"></script>
+
 <script src="/js/bootstrap.min.js"></script>
 
 <!-- Owl carousel -->
@@ -152,5 +159,12 @@
 
 <!-- Custom js -->
 <script src="/js/script.js"></script>
+
+<!-- Custom js -->
+<script th:src="@{/js/jobApplicationScript.js}"></script>
+
+<!-- include sweetalert2 js library. Note: place it in the body, not in the head -->
+<script src="https://cdn.jsdelivr.net/sweetalert2/5.3.5/sweetalert2.min.js"></script>
+
 </body>
 </html>

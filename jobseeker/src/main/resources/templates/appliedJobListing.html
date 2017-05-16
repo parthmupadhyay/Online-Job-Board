@@ -17,6 +17,10 @@
     <!-- Custom Style -->
     <link href="/css/main.css" rel="stylesheet"/>
 
+    <!-- include sweetalert2 css library -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/sweetalert2/5.3.5/sweetalert2.min.css" />
+
+
 </head>
 <body>
 <!-- Header start -->
@@ -53,54 +57,68 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-2 col-sm-4" style="margin: 20px 20px 20px 20px;">
-                <a class="btn btn-danger" th:href="@{/jobApplication/changeStatus}" th:onclick="${'javascript:cancelSelectedApplication();'}">Cancel</a>
-                <a class="btn btn-danger" th:href="@{/jobApplication/changeStatus}">Reject</a>
+        <form action="#" th:action="@{/jobApplication/changeStatus}"  method="post" enctype="multipart/form-data">>
+            <input hidden="hidden" name="jobseeker.id" th:value="${jobseeker.id}"/>
+
+            <div role="alert"><label class="alert alert-success" th:if="${rejectionMailSent} == true">
+                Application offer rejection E-mail has been sent successfully !</label>
             </div>
-        </div>
+            <div role="alert"><label class="alert alert-success" th:if="${cancellationMailSent} == true">
+                Application cancellation E-mail has been sent successfully !</label>
+            </div>
 
-        <div class="col-md-3 col-sm-8 pull-right">
+            <h3>
+                <label class="alert alert-danger" th:if="${notCancelled}"> <span th:text="${notCancelled}">cannot be cancelled.</span></label>
+            </h3>
+            <h3>
+                <label class="alert alert-danger" th:if="${notRejected}"> <span th:text="${notRejected}">cannot be rejected.</span></label>
+            </h3>
 
-        </div>
-            <div class="col-md-10 col-sm-12">
-                <!-- Search List -->
-                <ul class="searchList">
-                    <!-- job start -->
-                    <li data-th-each="application:${allApplications}">
 
-                        <div class="row">
-                            <div class="col-md-2 col-sm-12 pull-right">
-                                <input type="checkbox" name="app" th:value="${application}" />
-                            </div>
-                            <div class="col-md-10 col-sm-8">
-                                <div class="jobimg"><img src="/images/jobs/jobimg.jpg" alt="Job Name"/></div>
-                                <div class="jobinfo">
-                                    <h3><span th:text="${application.position.title}"></span></h3>
-                                    <div class="location"><span th:text="${application.position.company.name}"></span></div>
+                <div class="row">
+                    <div class="col-xs-6 pull-right" style="margin: 0px 20px 20px 20px;">
+                        <button type="submit" class="btn btn-danger" style="color:black;border:1px solid black; padding: 10px 40px 10px 40px;margin: 10px 10px 10px 0px;" name="action" value="cancel" >Cancel</button>
+                        <button type="submit" class="btn btn-danger" style="color:black;border:1px solid black; padding: 10px 40px 10px 40px;margin: 10px 10px 10px 0px;" name="action" value="reject" >Reject</button>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-sm-8 pull-right">
+
+                </div>
+                <div class="col-md-10 col-sm-12">
+                    <!-- Search List -->
+                    <ul class="searchList">
+                        <!-- job start -->
+                        <li data-th-each="application:${allApplications}">
+
+                            <div class="row">
+                                <div class="col-md-2 col-sm-12 pull-right">
+                                    <input type="checkbox" name="id" th:value="${application.id}" />
                                 </div>
-                                <div class="clearfix"></div>
+                                <div class="col-md-10 col-sm-8">
+                                    <div class="jobimg"><img src="/images/jobs/jobimg.jpg" alt="Job Name"/></div>
+                                    <div class="jobinfo">
+                                        <h3><span th:text="${application.position.title}"></span></h3>
+                                        <div class="location"><span th:text="${application.position.company.name}"></span></div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="col-md-3 col-sm-12 pull-right"> <!--class="col-md-2 col-sm-4"-->
+                                    <!--<div class="listbtn"><a th:href="@{/jobApplication?id=${position.id}">Apply Now</a></div> -->
+                                    <h4 th:if="*{application.status==0}" style="color: yellow"><span>Pending</span></h4>
+                                    <h4 th:if="*{application.status==1}" style="color: green"><span>Offered</span></h4>
+                                    <h4 th:if="*{application.status==2}" style="color: red"><span>Rejected</span></h4>
+                                    <h4 th:if="*{application.status==3}" style="color: green"><span>OfferAccepted</span></h4>
+                                    <h4 th:if="*{application.status==4}" style="color: red"><span>OfferRejected</span></h4>
+                                    <h4 th:if="*{application.status==5}" style="color: blue"><span>Cancelled</span></h4>
+                                </div>
                             </div>
-                            <div class="col-md-3 col-sm-8 pull-right"> <!--class="col-md-2 col-sm-4"-->
-                                <!--<div class="listbtn"><a th:href="@{/jobApplication?id=${position.id}">Apply Now</a></div> -->
-                                <h4 th:if="*{application.status==0}" style="color: yellow"><span>Pending</span></h4>
-                                <h4 th:if="*{application.status==1}" style="color: green"><span>Offered</span></h4>
-                                <h4 th:if="*{application.status==2}" style="color: red"><span>Rejected</span></h4>
-                                <h4 th:if="*{application.status==3}" style="color: green"><span>OfferAccepted</span></h4>
-                                <h4 th:if="*{application.status==4}" style="color: red"><span>OfferRejected</span></h4>
-                                <h4 th:if="*{application.status==5}" style="color: blue"><span>Cancelled</span></h4>
-                            </div>
-                        </div>
-                        <p th:text="${application.position.description}"></p>
-                    </li>
-                    <!-- job end -->
-
-
-                </ul>
-
-
-
-        </div>
+                            <p th:text="${application.position.description}"></p>
+                        </li>
+                        <!-- job end -->
+                    </ul>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -124,6 +142,6 @@
 <script src="/js/owl.carousel.js"></script>
 
 <!-- Custom js -->
-<script th:src="@{/js/appliedJobScript.js}"></script>
+<script th:src="@{/js/jobApplicationScript.js}"></script>
 </body>
 </html>
