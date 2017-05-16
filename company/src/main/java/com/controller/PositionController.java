@@ -4,24 +4,14 @@ import com.dao.CompanyRepository;
 import com.dao.PositionRepository;
 import com.models.Company;
 import com.models.Job_application;
-import com.models.Job_seeker;
 import com.models.Position;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.utility.NotificationService;
-import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -36,11 +26,8 @@ public class PositionController
     @Autowired
     PositionRepository positionRepository;
 
-    @Autowired
-    NotificationService notificationService;
-
     @RequestMapping(value = "/postjob",method = RequestMethod.GET)
-    public String loadPostJob(Model model)
+    public String loadPostJob(Model model,HttpSession session)
     {
         Position position= new Position();
         model.addAttribute("position", position);
@@ -61,7 +48,7 @@ public class PositionController
 
     @RequestMapping(value = "/updatePosition/{id}",method = RequestMethod.GET)
     public String loadUpdatePosition(@PathVariable Long id,
-                                     Model model)
+                                     Model model,HttpSession session)
     {
         Position position=positionRepository.findOne(id);
         model.addAttribute("position",position);
@@ -69,7 +56,7 @@ public class PositionController
     }
 
     @RequestMapping(value = "/updatePosition",method = RequestMethod.POST)
-    public String updatePosition(@ModelAttribute("position") Position position, HttpSession session, HttpServletRequest request)
+    public String updatePosition(@ModelAttribute("position") Position position, HttpSession session)
     {
         if(session.getAttribute("company")!=null)
         {
@@ -95,7 +82,6 @@ public class PositionController
     @RequestMapping(value = "/viewjobs",method = RequestMethod.GET)
     public String viewPositions(Model model, HttpSession session)
     {
-        if(session.getAttribute("company")!=null) {
             Company company_id = (Company) session.getAttribute("company");
             Company company = companyRepository.findOne((long) company_id.getId());//get company id from session
             List<Position> positionList = company.getPositions();
@@ -107,20 +93,14 @@ public class PositionController
             filters.add(false);
             model.addAttribute("filters",filters);
             return "viewjobs";
-        }
-        else
-            return "login";
     }
 
     @RequestMapping(value = "/viewjobs",method = RequestMethod.POST)
-    public String filterViewPositions(HttpSession session,
-                                      Model model,
+    public String filterViewPositions(Model model,
                                       @RequestParam(required = false) Boolean open,
                                       @RequestParam(required = false) Boolean cancelled,
-                                      @RequestParam(required = false) Boolean filled)
+                                      @RequestParam(required = false) Boolean filled,HttpSession session)
     {
-        if(session.getAttribute("company")!=null)
-        {
             Company company_id = (Company) session.getAttribute("company");
             Company company = companyRepository.findOne((long) company_id.getId());
             List<Position> positionList=new ArrayList<Position>();
@@ -161,19 +141,12 @@ public class PositionController
             model.addAttribute("filters",filters);
             model.addAttribute("positionList",positionList);
             return "viewjobs";
-        }
-        else
-        {
-            return "login";
-        }
     }
 
 
     @RequestMapping(value = "/position/{id}", method = RequestMethod.GET)
     public String viewJob(@PathVariable long id,Model model,HttpSession session)
     {
-        if(session.getAttribute("company")!=null)
-        {
             Company company=(Company) session.getAttribute("company");
             List<Position> positionList=company.getPositions();
             Position position = positionRepository.findOne(id);
@@ -187,17 +160,12 @@ public class PositionController
             {
                 return "errorpage";
             }
-        }
-        else
-            return "login";
-    }
+     }
 
 
     @RequestMapping(value="/position/cancel",method = RequestMethod.POST)
     public String cancelJob(@RequestParam long id,HttpSession session)
     {
-        if(session.getAttribute("company")!=null)
-        {
             Company company=(Company) session.getAttribute("company");
             Position position = positionRepository.findOne(id);
 
@@ -216,10 +184,8 @@ public class PositionController
                 return "redirect:/position/"+id;
             }
             return "errorpage";
-        }
-        else
-            return "login";
-    }
+
+     }
 
     private boolean checkIfPositionBelongsToCompany(Position position,Company company)
     {
