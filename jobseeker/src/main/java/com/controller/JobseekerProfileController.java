@@ -7,6 +7,8 @@ import com.models.Company_token;
 import com.models.Job_Seeker_Token;
 import com.models.Job_seeker;
 import com.utility.MailConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.mail.SimpleMailMessage;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -34,6 +37,7 @@ import java.util.UUID;
 @ComponentScan(value = "com.dao")
 public class JobseekerProfileController {
 
+    private static final Logger log = LoggerFactory.getLogger(JobseekerProfileController.class);
     @Autowired
     JobSeekerRepository jobseekerRepository;
 
@@ -55,24 +59,28 @@ public class JobseekerProfileController {
     }
 
 
+
     @RequestMapping(value = "/jobseekerProfile", method = RequestMethod.POST)
-    public String addCompany(@ModelAttribute("jobseeker") Job_seeker jobseeker, HttpServletRequest request, Model model) throws Exception {
+    public String addProfile(@ModelAttribute("jobseeker") Job_seeker jobseeker,
+                             HttpServletRequest request,
+                             Model model,
+                             HttpSession session) throws Exception {
         try {
             jobseeker.setActivated(0);
 
             if (jobseekerRepository.findByEmail(jobseeker.getEmail()) != null) {
                 model.addAttribute("emailExists", true);
-                return "registration";
+                return "jobseekerProfile";
             }
 
             jobseekerRepository.save(jobseeker);
-            MultipartFile profilePic = (MultipartFile) jobseeker.getProfilePic();
+             MultipartFile profilePic = (MultipartFile) jobseeker.getProfilePic();
             String name = jobseeker.getId() + ".png";
 
             byte[] bytes = profilePic.getBytes();
 
             BufferedOutputStream stream = new BufferedOutputStream(
-                    new FileOutputStream(new File("src/main/resources/static/images/profile/" + name)));
+                    new FileOutputStream(new File("src/main/resources/static/images/profilePic/" + name)));
             stream.write(bytes);
             stream.close();
         } catch (Exception e) {
@@ -93,18 +101,68 @@ public class JobseekerProfileController {
         jobseeker.setLast_name("");
         jobseeker.setPassword("");
         model.addAttribute("verificationEmailSent", true);
-        return "registration";
+        return "jobseekerProfile";
+    }
+
+    @RequestMapping(value = "/jobseekerProfile/view", method = RequestMethod.GET)
+    public String viewProfile(Model model,
+                              HttpSession session) {
+
+        Job_seeker jobseeker = jobseekerRepository.findOne(new Long(1)); //testing
+        //Job_seeker jobseeker = (Job_seeker) session.getAttribute("jobseeker");
+        log.debug("jobseeker to be edited:"+jobseeker.getId());
+        model.addAttribute("jobseeker", jobseeker);
+        return "updateProfile";
+    }
+
+    @RequestMapping(value = "/jobseekerProfile/edit",  method = RequestMethod.POST)
+    public String editProfile(@ModelAttribute("jobseeker") Job_seeker jobseeker,
+                             HttpServletRequest request,
+                             Model model,
+                             HttpSession session) throws Exception {
+
+        log.debug("---------------------inside update profile");
+        log.debug("update profiel for id:"+jobseeker.getId());
+        Job_seeker jobseeker_ = jobseekerRepository.findOne(jobseeker.getId());
+        //only update the info fields
+        jobseeker_.setFirst_name(jobseeker.getFirst_name());
+        jobseeker_.setLast_name(jobseeker.getLast_name());
+        jobseeker_.setIntroduction(jobseeker.getIntroduction());
+        jobseeker_.setEducation(jobseeker.getEducation());
+        jobseeker_.setSkills(jobseeker.getSkills());
+        if(jobseeker.getProfilePic() != null){
+            try{
+                MultipartFile profilePic = (MultipartFile) jobseeker.getProfilePic();
+                String name = jobseeker.getId() + ".png";
+
+                byte[] bytes = profilePic.getBytes();
+
+                BufferedOutputStream stream = new BufferedOutputStream(
+                        new FileOutputStream(new File("src/main/resources/static/images/profilePic/" + name)));
+                stream.write(bytes);
+                stream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        jobseekerRepository.save(jobseeker_);
+
+        session.setAttribute("jobseeker",jobseeker_);
+        log.debug("jobseeker  updated:"+jobseeker.getId());
+        model.addAttribute("jobseeker", jobseeker);
+        return "updateProfile";
     }
 
 
     @RequestMapping(value = "/jobseekerVerify", method = RequestMethod.GET)
-    public String verifyCompanyPage(Model model, @RequestParam("jobseeker_id") String jobseeker_id) {
+    public String verifyJobseekerPage(Model model, @RequestParam("jobseeker_id") String jobseeker_id) {
         model.addAttribute("jobseeker_id", jobseeker_id);
         return "verify";
     }
 
     @RequestMapping(value = "/jobseekerVerify", method = RequestMethod.POST)
-    public String verifyCompanyToken(HttpServletRequest request,
+    public String verifyJobseekerToken(HttpServletRequest request,
                                      @ModelAttribute("jobseeker_id") Long jobseeker_id,
                                      @ModelAttribute("token") String token,
                                      Model model) throws Exception {

@@ -40,79 +40,82 @@
         <div class="row">
             <div class="col-md-6 col-md-offset-3">
                 <div class="userccount">
-
-                    <!--<div class="alert alert-success" role="alert"><strong>Well done!</strong> Your account successfully created.</div>
-                    <div class="alert alert-warning" role="alert"><strong>Warning!</strong> Better check yourself, you're not looking too good.</div>-->
-                    <div role="alert"><label class="alert alert-danger" th:if="${emailExists}">Email address already
-                        registered ! </label></div>
-                    <div role="alert"><label class="alert alert-success" th:if="${verificationEmailSent}">Verification
+                  <div role="alert"><label class="alert alert-success" th:if="${verificationEmailSent}">Profile update
                         E-mail has
                         been sent successfully !</label></div>
+
+                    <div class="row" style="margin-top: 120px;">
+                        <div class="col-xs-3">
+                            <img class="img-responsive shelf-book" th:src="@{/images/profilePic/}+${jobseeker.id}+'.png'" />
+                        </div>
+                    </div>
+
                     <div>
-                        <h4 align="center" > Job Seeker Registration </h4>
+                        <h4 class="section-headline">
+                            Hi, <span th:text="${jobseeker}? ${#strings.toUpperCase(jobseeker.first_name)} : 'Job Seeker'"></span>
+                        </h4>
+                        <h4 align="center" > Your Profile </h4>
                     </div>
                     <div>
 
                         <div id="employee" class="formpanel tab-pane fade in">
-                            <form th:action="@{/jobseekerProfile}" method="post" enctype="multipart/form-data">
+                            <form th:action="@{/jobseekerProfile/edit}" th:objectmethod="post" enctype="multipart/form-data">
+                                <input hidden="hidden" name="jobseeker.id" th:value="${jobseeker.id}"/>
+                                <input hidden="hidden" name="jobseeker.password" th:value="${jobseeker.password}"/>
+                                <div class="formrow">
+                                    <h6 >Your username is <span th:text="${jobseeker.email}"></span></h6>
+                                </div>
 
                                 <div class="formrow">
-                                    <input type="text" name="first_name" class="form-control" placeholder="First Name"
+                                    <label>First Name</label>
+                                    <input type="text" name="name" class="form-control" placeholder="First Name"
                                            th:value="${jobseeker.first_name}"/>
                                 </div>
                                 <div class="formrow">
-                                    <input type="text" name="last_name" class="form-control" placeholder="Last Name"
+                                    <label>Last Name</label>
+                                    <input type="text" name="website" class="form-control" placeholder="Last Name"
                                            th:value="${jobseeker.last_name}"/>
                                 </div>
-                                <div class="formrow" >
-                                    <input type="text" name="email" class="form-control" placeholder="Email"
-                                           th:value="${jobseeker.email}"/>
-                                </div>
+
 
                                 <div class="formrow">
-                                    <input type="password" name="password" class="form-control" placeholder="Password"
-                                           th:value="${jobseeker.password}"/>
-                                </div>
-                                <div class="formrow" >
-                                    <input type="password" name="cpass" class="form-control"
-                                           placeholder="Confirm Password"/>
-                                </div>
-
-                                <div class="formrow">
-                                    <input type="text" name="introduction" class="form-control"
+                                    <label>Introduction</label>
+                                    <input type="text" name="hq_address" class="form-control"
                                            placeholder="Introduction" th:value="${jobseeker.introduction}"/>
                                 </div>
 
                                 <div class="formrow">
-                                    <input type="text" name="work_exp" class="form-control"
+                                    <label>Work Experience</label>
+                                    <input type="text" name="description" class="form-control"
                                            placeholder="Work Experience" th:value="${jobseeker.work_exp}"/>
                                 </div>
 
                                 <div class="formrow">
-                                    <input type="text" name="education" class="form-control"
+                                    <label>Education</label>
+                                    <input type="text" name="description" class="form-control"
                                            placeholder="Education" th:value="${jobseeker.education}"/>
                                 </div>
 
                                 <div class="formrow">
-                                    <input type="text" name="skills" class="form-control"
+                                    <label>Skills</label>
+                                    <input type="text" name="description" class="form-control"
                                            placeholder="Skills" th:value="${jobseeker.skills}"/>
                                 </div>
 
                                 <div class="formrow">
-                                    <h6>Upload Profile Picture:</h6>
+                                    <h6>Upload New Profile Picture:</h6>
                                 </div>
 
                                 <div class="formrow">
-                                    <input type="file" id="file" name="profilePic" class="form-control"
+                                    <input type="file" id="file" name="logo_url" class="form-control"
                                            th:value="${jobseeker.profilePic}"/>
                                 </div>
 
-                                <button type="submit" class="btn" name="registration">Register</button>
+                                <button  type="submit" class="btn" name="update">Update</button>
                             </form>
                         </div>
                     </div>
-                    <div class="newuser" ><i class="fa fa-user" aria-hidden="true"></i> Already a Member? <a th:href="@{/}">Login
-                        Here</a></div>
+
                 </div>
             </div>
         </div>
