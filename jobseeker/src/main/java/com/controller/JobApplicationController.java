@@ -54,7 +54,6 @@ public class JobApplicationController {
     private MailConstructor mailConstructor;
 
     @Autowired
-
     private JavaMailSender mailSender;
 
     /*@Autowired
@@ -74,14 +73,19 @@ public class JobApplicationController {
             Company company = position.getCompany();
             //Job_seeker jobseeker = (Job_seeker) session.getAttribute("jobseeker");
             Job_seeker jobseeker = jobSeekerRepository.findOne(new Long(1)); //testing get the user details from session or principal
+            Job_application jobApplication = new Job_application();
+            jobApplication.setPosition(position);
+            jobApplication.setJobseeker(jobseeker);
+            model.addAttribute("position", position);
+            model.addAttribute("company", company);
+            model.addAttribute("jobseeker", jobseeker);
+            model.addAttribute("jobApplication", jobApplication);
 
             //check is already applied to this position by same user
-            Job_application jobApplication = jobApplicationRepository.findByJobseekerAndPosition(jobseeker,position);
-            if(jobApplication != null){
-                jobApplication.setApplicationExists(true);
+            if(isAlreadyApplied(position,jobseeker)){
                 model.addAttribute("applicationExists", true);
-                jobApplication.setApplicationNotAllowed(true);
-                model.addAttribute("applicationNotAllowed", true);
+                jobApplication.setApplicationExists(true);
+               // return "redirect:/applicationError";
             }
 
             //check if same position has been applied and is in terminal state
@@ -92,20 +96,13 @@ public class JobApplicationController {
                 }*/
 
             //check if 5 pending applicaitons exist
-            Long applicationCnt = jobApplicationRepository.countByJobseekerAndStatus(jobseeker,0);
-
-            log.debug("total pending count of applications for this user:" + applicationCnt);
-            if (applicationCnt >= 5) {
+            if(isApplicationQuotaReached(jobseeker)){
+                model.addAttribute("applicationNotAllowed", false);
                 jobApplication.setApplicationNotAllowed(true);
-                model.addAttribute("applicationNotAllowed", true);
+               // return "redirect:/applicationError";
             }
 
-            jobApplication = new Job_application(position,jobseeker,0);
-            model.addAttribute("position", position);
-            model.addAttribute("company", company);
-            model.addAttribute("jobseeker", jobseeker);
-            model.addAttribute("jobApplication", jobApplication);
-           // model.addAttribute("applicationNotAllowed", false);
+
             log.debug("------------------end");
         }
         return "jobApplication";
@@ -113,52 +110,47 @@ public class JobApplicationController {
 
 
     @RequestMapping(value="/jobApplication/apply",params="action=applyByProfile",method=RequestMethod.POST)
-    public String action1(@ModelAttribute("company") Company company,
-                          @ModelAttribute("position") Position position,
-                          @ModelAttribute("jobseeker") Job_seeker jobseeker,
+    public String action1(
+                          @RequestParam("position.id") Long position_id,
+                          @RequestParam("jobseeker.id") Long jobseeker_id,
+                          @RequestParam("company.id") Long company_id,
                           Model model,
                           Principal principal)
     {
         log.debug("Action1 block called");
         log.debug("inside createJobApplication");
-        log.debug("position for which is appling is :"+position.getId());
-        log.debug("jobseeker id is :"+jobseeker.getId());
+        log.debug("position for which is appling is :"+position_id);
+        log.debug("jobseeker id is :"+jobseeker_id);
         int status = 0; //pending
-        Position position_ = positionRepository.findOne(position.getId());
-        Job_seeker jobseeker_ = jobSeekerRepository.findOne(new Long(1));
+        Position position_ = positionRepository.findOne(position_id);
+        Job_seeker jobseeker_ = jobSeekerRepository.findOne(jobseeker_id);
         Job_application jobApplication = new Job_application(position_,jobseeker_,status);
         jobApplicationRepository.save(jobApplication);
 
-        /*List<Job_application> appliedJobs = jobApplicationRepository.findAllByJobseeker(jobseeker);
-        if(appliedJOb!= null)
-            appliedJobs.add(jobApplication);
-        else
-            appliedJobs = new ArrayList<Job_application>();
-        jobseeker.setJobapplications(appliedJobs);
-        jobSeekerRepository.save(jobseeker);*/
 
-        String message = "\n Thank you for applying to  " + company.getName() +"!.\n";
-       // sendApplicationNotification(message, position,jobseeker);
+        String message = "\n Thank you for applying to  " + position_.getCompany().getName() +"!.\n";
+        String sub = "Job-board:Job Applied";
+        sendApplicationNotification(sub, message, position_,jobseeker_);
         model.addAttribute("applicationEmailSent",true);
         log.debug("------------------end");
          return "redirect:/jobListing";
     }
     @RequestMapping(value="/jobApplication/apply",params="action=applyByResume",method=RequestMethod.POST)
-    public String action2(@ModelAttribute("company") Company company,
-                          @ModelAttribute("position") Position position,
-                          @ModelAttribute("jobseeker") Job_seeker jobseeker,
+    public String action2(@RequestParam("position.id") Long position_id,
+                          @RequestParam("jobseeker.id") Long jobseeker_id,
+                          @RequestParam("company.id") Long company_id,
                           @ModelAttribute("jobApplication") Job_application jobApplication,
                           Model model,
                           Principal principal)
     {
         log.debug("Action2 block called");
         log.debug("inside createJobApplication with resume");
-        log.debug("position for which is appling is :"+position.getId());
-        log.debug("jobseeker id is :"+jobseeker.getId());
+        log.debug("position for which is appling is :"+position_id);
+        log.debug("jobseeker id is :"+jobseeker_id);
         String resume_path= "src/main/resources/static/resume/";
         try{
             MultipartFile resume = (MultipartFile) jobApplication.getResume_file();
-            String name = jobseeker.getId() +"-" + position.getId() + ".pdf";
+            String name = jobseeker_id +"-" + position_id + ".pdf";
             log.debug("name is :"+name);
             byte[] bytes = resume.getBytes();
             resume_path +=  name;
@@ -173,19 +165,20 @@ public class JobApplicationController {
 
 
         int status = 0; //pending
+        Position position = positionRepository.findOne(position_id);
+        Job_seeker jobseeker = jobSeekerRepository.findOne(jobseeker_id);
+
         jobApplication.setPosition(position);
         jobApplication.setJobseeker(jobseeker);
         jobApplication.setStatus(status);
-
+        jobApplication.setResume_url(resume_path);
         jobApplicationRepository.save(jobApplication);
 
-        /*List<Job_application> appliedJobs = jobseeker.getJobapplications();
-        appliedJobs.add(jobApplication);
-        jobseeker.setJobapplications(appliedJobs);
-        jobSeekerRepository.save(jobseeker);*/
 
-        String message = "\n Thank you for applying to  " + company.getName() +"!.\n";
-       //sendApplicationNotification(message, position,jobseeker);
+
+        String message = "\n Thank you for applying to  " + position.getCompany().getName() +"!.\n";
+        String sub = "Job-board:Job Applied";
+        sendApplicationNotification(sub, message, position,jobseeker);
         model.addAttribute("applicationEmailSent",true);
         log.debug("------------------end");
         return "redirect:/jobListing";
@@ -206,7 +199,7 @@ public class JobApplicationController {
     }
 
     @RequestMapping(value="/jobApplication/changeStatus" , method=RequestMethod.POST)
-    public String cancelOrrejectApplication(HttpSession session, Model model,
+    public String cancelOrRejectApplication(HttpSession session, Model model,
                                             @RequestParam(value="action", required=true) String action,
                                             @ModelAttribute("allApplications") List<Job_application> allApplications){
 
@@ -239,12 +232,34 @@ public class JobApplicationController {
     }
 
 
-    private void sendApplicationNotification(String primaryMsg, Position position, Job_seeker jobseeker){
+    private void sendApplicationNotification(String sub ,String primaryMsg, Position position, Job_seeker jobseeker){
 
-        SimpleMailMessage new_email = mailConstructor.constructApplicationSentEmail(primaryMsg, position , jobseeker);
+        SimpleMailMessage new_email = mailConstructor.constructApplicationSentEmail(sub,primaryMsg, position , jobseeker);
 
         mailSender.send(new_email);
 
+    }
+
+    private boolean isAlreadyApplied(Position position, Job_seeker jobseeker){
+        Job_application jobApplication = jobApplicationRepository.findByJobseekerAndPosition(jobseeker,position);
+        if(jobApplication != null){
+            jobApplication.setApplicationExists(true);
+            jobApplication.setApplicationNotAllowed(true);
+            return true;
+
+        }
+        return false;
+    }
+
+    //pending more than 5
+    private boolean isApplicationQuotaReached( Job_seeker jobseeker){
+        Long applicationCnt = jobApplicationRepository.countByJobseekerAndStatus(jobseeker,0);
+
+        log.debug("total pending count of applications for this user:" + applicationCnt);
+        if (applicationCnt >= 5) {
+            return true;
+        }
+        return false;
     }
 
 }

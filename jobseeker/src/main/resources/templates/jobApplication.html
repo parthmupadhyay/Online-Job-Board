@@ -58,20 +58,20 @@
 
 
 
-    <form action="#" th:action="@{/jobApplication/apply}"  method="post" enctype="multipart/form-data">>
-        <input hidden="hidden" th:field="*{position.id}" />
-        <input hidden="hidden" th:field="*{jobseeker.id}" />
-        <input hidden="hidden" th:field="*{company.id}" />
+    <form action="#" th:action="@{/jobApplication/apply}" th:object="${jobApplication}"  method="post" enctype="multipart/form-data">>
+        <input hidden="hidden" name="position.id" th:value="${position.id}"/>
+        <input hidden="hidden" name="jobseeker.id" th:value="${jobseeker.id}"/>
+        <input hidden="hidden" name="company.id" th:value="${company.id}"/>
 
-        <div role="alert"><label class="alert alert-success" th:if="${jobApplication.applicationEmailSent}">Application submitted!
+        <div role="alert"><label class="alert alert-success" th:if="${jobApplication.applicationEmailSent} == true">Application submitted!
             Application E-mail has been sent successfully !</label>
         </div>
 
         <h3>
-            <label class="alert alert-danger" th:if="${jobApplication.applicationExists}"> You have already applied for this position.</label>
+            <label class="alert alert-danger" th:if="${jobApplication.applicationExists} == true"> You have already applied for this position.</label>
         </h3>
         <h3>
-            <label class="alert alert-danger" th:if="${jobApplication.applicationNotAllowed}">Hey, <span th:text="${jobseeker}? ${#strings.toUpperCase(jobseeker.first_name)} : 'Job-Seeker'"></span> ! You already applied for 5 positions.</label>
+            <label class="alert alert-danger" th:if="${jobApplication.applicationNotAllowed} == true">Hey, <span th:text="${jobseeker}? ${#strings.toUpperCase(jobseeker.first_name)} : 'Job-Seeker'"></span> ! You already applied for 5 positions.</label>
         </h3>
 
 
@@ -85,7 +85,7 @@
 
 
             <div class="col-xs-9">
-                <h3 th:text="${position.title}">Job Title</h3>
+                <h3 th:text="${jobApplication.position.title}">Job Title</h3>
                 <div class="row">
                     <div class="col-xs-5">
                         <h5><strong>Company: </strong><span th:text="${company.name}"></span></h5>
@@ -96,7 +96,7 @@
                         <p><strong>Salary: $ </strong><span th:text="${position.salary}"></span></p>
                     </div>
 
-                    <div class="col-xs-7">
+                    <div class="col-xs-7" >
                         <div class="panel panel-default" style="border-width: 5px; margin-top: 20px;">
                             <div class="panel-body">
                                 <div class="row">
@@ -105,21 +105,15 @@
                                         <!--<div class="col-md-2 col-sm-4">
                                             <div class="btn btn-warning" ><a th:disabled="${applicationNotAllowed}" th:href="@{/jobApplication/apply(position_id=${position.id},jobseeker_id=${jobseeker.id})}">Apply with Profile</a></div>
                                         </div>-->
-
                                     </div>
-                                    <div class="col-xs-6" th:if="${applicationNotAllowed}">
-
+                                    <div class="col-xs-6">
                                         <button type="submit" class="btn btn-warning" style="color:black;border:1px solid black; padding: 10px 40px 10px 40px;margin: 10px 10px 10px 0px;" name="action" value="applyByResume">Apply using Resume</button>
-
                                         <!--<div class="col-md-2 col-sm-4">
                                             <div class="btn btn-warning" ><a th:disabled="${applicationNotAllowed}" th:href="@{/jobApplication/applyResume(position_id=${position.id},jobseeker_id=${jobseeker.id})}">Apply with Resume</a></div>
-
                                         </div>-->
                                         <h4>Upload Resume</h4>
                                         <input type="file" id="file" name="resume_file" class="form-control"
                                                th:value="${jobApplication.resume_file}"/>
-
-
                                     </div>
                                 </div>
                             </div>

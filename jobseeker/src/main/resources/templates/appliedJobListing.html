@@ -55,7 +55,7 @@
 
         <div class="row">
             <div class="col-md-2 col-sm-4" style="margin: 20px 20px 20px 20px;">
-                <a class="btn btn-danger" th:href="@{/jobApplication/changeStatus}" onclick="cancelSelectedApplication">Cancel</a>
+                <a class="btn btn-danger" th:href="@{/jobApplication/changeStatus}" th:onclick="${'javascript:cancelSelectedApplication();'}">Cancel</a>
                 <a class="btn btn-danger" th:href="@{/jobApplication/changeStatus}">Reject</a>
             </div>
         </div>
@@ -124,6 +124,6 @@
 <script src="/js/owl.carousel.js"></script>
 
 <!-- Custom js -->
-<script th:src="@{/js/script.js}"></script>
+<script th:src="@{/js/appliedJobScript.js}"></script>
 </body>
 </html>
