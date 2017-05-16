@@ -38,7 +38,6 @@ public class MailConstructor {
 
         Long jobseeker_id = job_seeker.getId();
 
-
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(job_seeker.getEmail());
         email.setSubject(subject);

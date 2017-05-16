@@ -63,7 +63,8 @@ public class JobApplicationController {
     @RequestMapping(value = "/jobApplication/open", method = RequestMethod.GET)
     public String jobApplication(@PathParam("position_id") Long position_id ,
                         Model model,
-                        Principal principal)
+                        Principal principal,
+                                 HttpSession session)
     {
         log.debug("------------------inside jobapplication");
         log.debug("position for which is appling is :"+position_id);
@@ -72,8 +73,9 @@ public class JobApplicationController {
 
             Position position = positionRepository.findOne(position_id);
             Company company = position.getCompany();
-            //Job_seeker jobseeker = (Job_seeker) session.getAttribute("jobseeker");
-            Job_seeker jobseeker = jobSeekerRepository.findOne(new Long(1)); //testing get the user details from session or principal
+            Job_seeker jobseeker = (Job_seeker) session.getAttribute("jobseeker");
+            //Job_seeker jobseeker = jobSeekerRepository.findOne(new Long(1)); //testing get the user details from session or principal
+            log.debug("jobseeker id from session :" +jobseeker.getId());
             Job_application jobApplication = new Job_application();
             jobApplication.setPosition(position);
             jobApplication.setJobseeker(jobseeker);
@@ -190,8 +192,8 @@ public class JobApplicationController {
     public String getAllApplications(HttpSession session, Model model){
 
         log.debug("----------inside getallapplciations");
-        Job_seeker jobseeker = jobSeekerRepository.findOne(new Long(1)); //testing
-        //Job_seeker jobseeker = (Job_seeker) session.getAttribute("jobseeker");
+        //Job_seeker jobseeker = jobSeekerRepository.findOne(new Long(1)); //testing
+        Job_seeker jobseeker = (Job_seeker) session.getAttribute("jobseeker");
         List<Job_application> allApplications = jobApplicationRepository.findAllByJobseeker(jobseeker);
         log.debug("all applications size:"+allApplications.size());
         List<Long> selectedApplications = new ArrayList<>();

@@ -29,6 +29,15 @@ public class LoginController {
         else
             return "login";
     }
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public String logout(HttpSession session)
+    {
+        if(session.getAttribute("jobseeker")!=null)
+            session.removeAttribute("jobseeker");
+
+        return "login";
+    }
+
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String verify_login(HttpServletRequest request,

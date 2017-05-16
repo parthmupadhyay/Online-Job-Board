@@ -48,12 +48,12 @@
 
                         <!-- login form -->
                         <div class="formpanel">
-                            <form th:action="@{/companyVerify}" method="post">
+                            <form th:action="@{/jobseekerVerify}" method="post">
                                 <div class="formrow">
                                     <input type="text" name="token" class="form-control" placeholder="Token"/>
                                 </div>
                                 <div class="formrow">
-                                    <input type="hidden" name="company_id" class="form-control" th:value="${company_id}"
+                                    <input type="hidden" name="jobseeker_id" class="form-control" th:value="${jobseeker_id}"
                                            placeholder="Token"/>
                                 </div>
                                 <br/> <br/>
