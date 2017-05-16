@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+
+    <title>Online Job Portal - New Job</title>
+    <!-- Fav Icon -->
+    <link rel="shortcut icon" href="favicon.ico"/>
+
+    <!-- Owl carousel -->
+    <link href="/css/owl.carousel.css" rel="stylesheet"/>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Font Awesome -->
+    <link href="/css/font-awesome.css" rel="stylesheet"/>
+
+    <!-- Custom Style -->
+    <link href="/css/main.css" rel="stylesheet"/>
+</head>
+<body>
+<!-- Header start -->
+
+<div th:replace="common/header :: header"/>
+<!-- Header end -->
+
+<div class="pageTitle">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-6">
+                <h1>Applications</h1>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="listpgWraper">
+    <dic class="col-md-3"></dic>
+    <div class="col-md-6">
+    <div class="row userccount" data-th-each="application : ${applications}">
+        <h5 class="col-md-8" th:text="${'Applicant: '+application.job_seeker.first_name +' '+application.job_seeker.last_name}"></h5>
+        <a th:href="@{'/jobapplication/'+${application.id}}" class="col-md-4 "><button class="btn btn-success">View Application</button></a>
+    </div>
+    </div>
+</div>
+
+<!--Footer-->
+
+<div th:replace="common/footer :: footer"/>
+<!--Footer end-->
+
+<!--Copyright-->
+<div class="copyright">
+    <div class="container">
+        <div class="bttxt">Copyright &copy; 2017 Your Company Name. All Rights Reserved. Design by: <a
+                href="http://graphicriver.net/user/ecreativesol" target="_blank">eCreativeSolutions</a></div>
+    </div>
+</div>
+
+<!-- Bootstrap's JavaScript -->
+<script src="/js/jquery-2.1.4.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Owl carousel -->
+<script src="/js/owl.carousel.js"></script>
+
+<!-- Custom js -->
+<script src="/js/script.js"></script>
+</body>
+</html>
