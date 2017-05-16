@@ -80,6 +80,8 @@ public class JobApplicationController {
             if(jobApplication != null){
                 jobApplication.setApplicationExists(true);
                 model.addAttribute("applicationExists", true);
+                jobApplication.setApplicationNotAllowed(true);
+                model.addAttribute("applicationNotAllowed", true);
             }
 
             //check if same position has been applied and is in terminal state
@@ -127,13 +129,16 @@ public class JobApplicationController {
         Job_application jobApplication = new Job_application(position_,jobseeker_,status);
         jobApplicationRepository.save(jobApplication);
 
-        List<Job_application> appliedJobs = jobseeker.getJobapplications();
-        appliedJobs.add(jobApplication);
+        /*List<Job_application> appliedJobs = jobApplicationRepository.findAllByJobseeker(jobseeker);
+        if(appliedJOb!= null)
+            appliedJobs.add(jobApplication);
+        else
+            appliedJobs = new ArrayList<Job_application>();
         jobseeker.setJobapplications(appliedJobs);
-        jobSeekerRepository.save(jobseeker);
+        jobSeekerRepository.save(jobseeker);*/
 
-        String message = "\n Thank you for applying to  " + position.getCompany().getName() +"!.\n";
-        sendApplicationNotification(message, position,jobseeker);
+        String message = "\n Thank you for applying to  " + company.getName() +"!.\n";
+       // sendApplicationNotification(message, position,jobseeker);
         model.addAttribute("applicationEmailSent",true);
         log.debug("------------------end");
          return "redirect:/jobListing";
@@ -174,13 +179,13 @@ public class JobApplicationController {
 
         jobApplicationRepository.save(jobApplication);
 
-        List<Job_application> appliedJobs = jobseeker.getJobapplications();
+        /*List<Job_application> appliedJobs = jobseeker.getJobapplications();
         appliedJobs.add(jobApplication);
         jobseeker.setJobapplications(appliedJobs);
-        jobSeekerRepository.save(jobseeker);
+        jobSeekerRepository.save(jobseeker);*/
 
-        String message = "\n Thank you for applying to  " + position.getCompany().getName() +"!.\n";
-       sendApplicationNotification(message, position,jobseeker);
+        String message = "\n Thank you for applying to  " + company.getName() +"!.\n";
+       //sendApplicationNotification(message, position,jobseeker);
         model.addAttribute("applicationEmailSent",true);
         log.debug("------------------end");
         return "redirect:/jobListing";
