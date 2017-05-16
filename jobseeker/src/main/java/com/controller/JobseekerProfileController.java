@@ -108,8 +108,8 @@ public class JobseekerProfileController {
     public String viewProfile(Model model,
                               HttpSession session) {
 
-        Job_seeker jobseeker = jobseekerRepository.findOne(new Long(1)); //testing
-        //Job_seeker jobseeker = (Job_seeker) session.getAttribute("jobseeker");
+        //Job_seeker jobseeker = jobseekerRepository.findOne(new Long(1)); //testing
+        Job_seeker jobseeker = (Job_seeker) session.getAttribute("jobseeker");
         log.debug("jobseeker to be edited:"+jobseeker.getId());
         model.addAttribute("jobseeker", jobseeker);
         return "updateProfile";

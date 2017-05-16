@@ -48,12 +48,14 @@
                         <div class="col-xs-3">
                             <img class="img-responsive shelf-book" th:src="@{/images/profilePic/}+${jobseeker.id}+'.png'" />
                         </div>
+                        <div class="col-xs-3">
+                            <h4 >
+                                Hi, <span th:text="${jobseeker}? ${#strings.toUpperCase(jobseeker.first_name)} : 'Job Seeker'"></span>
+                            </h4>
+                        </div>
                     </div>
 
                     <div>
-                        <h4 class="section-headline">
-                            Hi, <span th:text="${jobseeker}? ${#strings.toUpperCase(jobseeker.first_name)} : 'Job Seeker'"></span>
-                        </h4>
                         <h4 align="center" > Your Profile </h4>
                     </div>
                     <div>
