@@ -73,7 +73,7 @@ public class PositionController
                 return "redirect:/viewjobs";
             }
             else
-                return "errorpage";
+                return "error";
         }
         else
             return "login";
@@ -158,7 +158,7 @@ public class PositionController
             }
             else
             {
-                return "errorpage";
+                return "error";
             }
      }
 
@@ -183,13 +183,20 @@ public class PositionController
                 positionRepository.save(position);
                 return "redirect:/position/"+id;
             }
-            return "errorpage";
+            return "error";
 
      }
+    /*@RequestMapping(value="**",method = RequestMethod.GET)
+    public String getAnythingelse(HttpSession session)
+    {
+        return "error";
+    }*/
 
     private boolean checkIfPositionBelongsToCompany(Position position,Company company)
     {
         boolean flag=false;
+        if(position==null)
+            return false;
         List<Position> positionList=company.getPositions();
         for (Position temp:positionList)
         {
