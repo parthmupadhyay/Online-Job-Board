@@ -83,18 +83,10 @@ public class PositionController
                 updatePosition.setSalary(position.getSalary());
                 updatePosition.setTitle(position.getTitle());
                 positionRepository.save(updatePosition);
-                StringBuilder message=new StringBuilder("Position has been updated\n");
-                message.append("Title:"+updatePosition.getTitle()+"\n");
-                message.append("Job Description:"+updatePosition.getDescription()+"\n");
-                message.append("Responsibilities:"+updatePosition.getResponsibilities()+"\n");
-                message.append("Location:"+updatePosition.getLocation()+"\n");
-                message.append("Salary:"+updatePosition.getSalary()+"\n");
-                notifyJobSeekers(company,updatePosition,message.toString());
                 return "redirect:/viewjobs";
             }
             else
                 return "errorpage";
-
         }
         else
             return "login";
@@ -212,69 +204,21 @@ public class PositionController
             if(checkIfPositionBelongsToCompany(position,company))
             {
                 List<Job_application> applications= position.getJobapplications();
-                List<Job_seeker> nonTerminalSeekers=new ArrayList<>();
                 for (Job_application application:applications)
                 {
                     if(application.getStatus()==3)
                     {
                         return "redirect:/position/"+id;
                     }
-                    if(application.getStatus()==0||application.getStatus()==0)
-                        nonTerminalSeekers.add(application.getJob_seeker());
-
                 }
                 position.setStatus(2);
                 positionRepository.save(position);
-                //notify non terminal applicants --should be moved to AOP
-                String message="Thank you for your application.\n" +
-                                "\n" +
-                                "Unfortunately, we have cancelled the current opening at "+company.getName()+" at this time.  We will keep your resume on file, and will let you know if there's a potential match for a future role.\n" +
-                                "\n" +
-                                "Thanks again for your interest in "+company.getName()+".  We wish you luck in your search.\n" +
-                                "\n" +
-                                "Regards,\n" +
-                                company.getName()+"  Recruiting";
-                notifyJobSeekers(company,position,message);
                 return "redirect:/position/"+id;
             }
             return "errorpage";
         }
         else
             return "login";
-    }
-
-    private void notifyJobSeekers(Company company,Position position,String message)
-    {
-        List<Job_seeker> jobSeekers=getNonTerminalJobSeekers(position);
-        if(jobSeekers.isEmpty())
-            return;
-        else
-        {
-            try
-            {
-                for(Job_seeker seeker:jobSeekers)
-                {
-                    notificationService.sendNotificaitoin(seeker, position, company,message);
-                }
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private List<Job_seeker> getNonTerminalJobSeekers(Position position)
-    {
-        List<Job_application> applications= position.getJobapplications();
-        List<Job_seeker> nonTerminalSeekers=new ArrayList<>();
-        for(Job_application application:applications)
-        {
-            if(application.getStatus()==0||application.getStatus()==0)
-                nonTerminalSeekers.add(application.getJob_seeker());
-
-        }
-        return nonTerminalSeekers;
     }
 
     private boolean checkIfPositionBelongsToCompany(Position position,Company company)
