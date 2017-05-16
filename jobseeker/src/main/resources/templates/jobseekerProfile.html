@@ -1,10 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
-    <title><!DOCTYPE html>
-        <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-        <head>
 
             <title>Online Job Portal</title>
             <!-- Fav Icon -->
@@ -21,7 +17,7 @@
 
             <!-- Custom Style -->
             <link href="/css/main.css" rel="stylesheet"/>
-        </head>
+</head>
 <body>
 <!-- Header start -->
 
@@ -53,11 +49,12 @@
                         E-mail has
                         been sent successfully !</label></div>
                     <div>
-                        <h4 align="center"> Job Seeker Registration </h4>
+                        <h4 align="center" th:if="${registration}"> Job Seeker Registration </h4>
+                        <h4 align="center" th:if="${profile}"> Job Seeker Profile </h4>
                     </div>
                     <div>
 
-                        <div id="employer" class="formpanel tab-pane fade in">
+                        <div id="employee" class="formpanel tab-pane fade in">
                             <form th:action="@{/jobseekerProfile}" method="post" enctype="multipart/form-data">
                                 <div class="formrow">
                                     <input type="text" name="name" class="form-control" placeholder="First Name"
@@ -92,7 +89,7 @@
 
                                 <div class="formrow">
                                     <input type="text" name="description" class="form-control"
-                                           placeholder="Education th:value="${jobseeker.education}"/>
+                                           placeholder="Education" th:value="${jobseeker.education}"/>
                                 </div>
 
                                 <div class="formrow">
@@ -142,10 +139,5 @@
 
 <!-- Custom js -->
 <script src="/js/script.js"></script>
-</body>
-</html></title>
-</head>
-<body>
-
 </body>
 </html>

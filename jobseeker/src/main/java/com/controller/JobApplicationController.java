@@ -214,29 +214,31 @@ public class JobApplicationController {
         switch(action) {
             case "reject":
                 log.debug("reject ");
-                List<String> notRejected = performRejection(selectedApplications);
-                if(notRejected.size()> 1){
-                    model.addAttribute("notRejected",String.join(",",notRejected));
-                }
+                if(selectedApplications.length > 1) {
+                    List<String> notRejected = performRejection(selectedApplications);
+                    if (notRejected.size() > 1) {
+                        model.addAttribute("notRejected", String.join(",", notRejected));
+                    }
 
                     String primaryMsg = "Thank you for your time. Best wishes for your future. Please feel free to contact again whenever new position fits you. ";
                     String sub = "JobPortal: Application Rejected";
                     sendApplciationRejectionMail(sub, primaryMsg, selectedApplications, notRejected, jobseeker);
                     model.addAttribute("rejectionMailSent", true);
 
-
+                }
                 break;
             case "cancel":
                 log.debug("cancel");
-                List<String> notCancelled = performCancellation(selectedApplications);
-                if(notCancelled.size()> 1){
-                    model.addAttribute("notCancelled",String.join(",",notCancelled));
-                }
-                    primaryMsg = "Thank you for your response. We hope to see you again. Best wishes! ";
-                    sub = "JobPortal: Application Offer Rejected";
+                if(selectedApplications.length > 1) {
+                    List<String> notCancelled = performCancellation(selectedApplications);
+                    if (notCancelled.size() > 1) {
+                        model.addAttribute("notCancelled", String.join(",", notCancelled));
+                    }
+                    String primaryMsg = "Thank you for your response. We hope to see you again. Best wishes! ";
+                    String sub = "JobPortal: Application Offer Rejected";
                     sendApplciationCancellationMail(sub, primaryMsg, selectedApplications, notCancelled, jobseeker);
                     model.addAttribute("cancellationMailSent", true);
-
+                }
                 break;
 
             default:
@@ -244,7 +246,12 @@ public class JobApplicationController {
 
                 break;
         }
-        return "redirect:/allApplications";
+
+        List<Job_application> allApplications = jobApplicationRepository.findAllByJobseeker(jobseeker);
+        log.debug("all applications size:"+allApplications.size());
+        model.addAttribute("allApplications",allApplications);
+        model.addAttribute("jobseeker", jobseeker);
+        return "appliedJobListing";
     }
 
 
