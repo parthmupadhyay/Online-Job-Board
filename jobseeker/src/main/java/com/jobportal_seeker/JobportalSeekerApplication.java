@@ -12,6 +12,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @ComponentScan(value = "com.controller")
 @EnableJpaRepositories(value = "com.dao")
 @ComponentScan(value = "com.utility")
+@ComponentScan(value = "com.daoImpl")
 @EnableAsync
 @SpringBootApplication
 public class JobportalSeekerApplication {

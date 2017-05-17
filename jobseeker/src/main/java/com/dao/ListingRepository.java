@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by karan on 5/13/2017.
  */
-public interface ListingRepository extends CrudRepository<Position, Long> {
+public interface ListingRepository extends PagingAndSortingRepository<Position, Long> {
 
     @Query("SELECT DISTINCT p.company from Position p")
     List<Company> findDistinctCompany();
