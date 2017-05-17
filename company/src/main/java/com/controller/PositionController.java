@@ -6,13 +6,16 @@ import com.models.Company;
 import com.models.Job_application;
 import com.models.Position;
 import com.utility.NotificationService;
+import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by parth on 5/13/2017.
@@ -85,6 +88,10 @@ public class PositionController
             Company company_id = (Company) session.getAttribute("company");
             Company company = companyRepository.findOne((long) company_id.getId());//get company id from session
             List<Position> positionList = company.getPositions();
+            Set<Position> positionSet=new HashSet<>();
+            positionSet.addAll(positionList);
+            positionList.clear();
+            positionList.addAll(positionSet);
             System.out.println(positionList.toString());
             model.addAttribute("positionList", positionList);
             ArrayList<Boolean> filters=new ArrayList<>();
