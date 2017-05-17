@@ -164,7 +164,7 @@ public class PositionController
 
 
     @RequestMapping(value="/position/cancel",method = RequestMethod.POST)
-    public String cancelJob(@RequestParam long id,HttpSession session)
+    public String cancelJob(@RequestParam long id,Model model,HttpSession session)
     {
             Company company=(Company) session.getAttribute("company");
             Position position = positionRepository.findOne(id);
@@ -176,12 +176,16 @@ public class PositionController
                 {
                     if(application.getStatus()==3)
                     {
-                        return "redirect:/position/"+id;
+                        model.addAttribute("position",position);
+                        model.addAttribute("message","Position cannot be cancelled, applicant has accepted offer");
+                        return "job";
                     }
                 }
                 position.setStatus(2);
                 positionRepository.save(position);
-                return "redirect:/position/"+id;
+                model.addAttribute("position",position);
+                model.addAttribute("message","Position is cancelled");
+                return "job";
             }
             return "error";
 

@@ -41,6 +41,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8 col-md-offset-2 userccount">
+                <label class="alert alert-danger" th:if="${message}!=null" th:text="${message}"></label>
                 <h3 th:text="${'Job Id : '+position.id}"></h3>
         <ul class="jbdetail">
             <li class="row">

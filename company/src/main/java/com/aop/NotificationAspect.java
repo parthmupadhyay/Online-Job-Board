@@ -54,7 +54,8 @@ public class NotificationAspect
     {
         if(returnString.contains("position"))
         {
-            HttpSession session = (HttpSession) joinPoint.getArgs()[1];
+            Object[] args=joinPoint.getArgs();
+            HttpSession session = (HttpSession) args[args.length-1];
             Company company = (Company) session.getAttribute("company");
             Position position = positionRepository.findOne((Long) joinPoint.getArgs()[0]);
             if(position.getStatus()!=3)
