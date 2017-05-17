@@ -21,8 +21,8 @@
                         <div class="navbar-collapse collapse" id="nav-main">
                             <ul class="nav navbar-nav">
                                 <li><a th:href="@{/jobListing}"> <span th:text="${jobseeker}? 'Home' : ''"></span> </a></li>
-                                <li><a th:href="@{/about-us}"> <span th:text="${jobseeker}? 'About us' : ''"></span></a></li>
-                                <li><a th:href="@{/contact-us}"> <span th:text="${jobseeker}? 'Contact us' : ''"></span></a></li>
+                                <li><a th:href="@{/aboutus}"> <span th:text="${jobseeker}? 'About us' : ''"></span></a></li>
+                                <li><a th:href="@{/contactus}"> <span th:text="${jobseeker}? 'Contact us' : ''"></span></a></li>
                                 <li class="dropdown" th:if="${jobseeker}"><a href="#."> <span th:text="${jobseeker}? 'Pages' : ''"></span> <span class="caret"></span></a>
                                     <!-- dropdown start -->
                                     <ul class="dropdown-menu">
