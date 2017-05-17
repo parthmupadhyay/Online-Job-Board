@@ -55,7 +55,7 @@ public class JobseekerProfileController {
     private JavaMailSender mailSender;
 
     @RequestMapping(value = "/jobseekerProfile", method = RequestMethod.GET)
-    public String registration(Model model) {
+    public String registration(Model model, HttpSession session) {
         Job_seeker jobseeker = new Job_seeker();
 
         model.addAttribute("jobseeker", jobseeker);
@@ -65,10 +65,9 @@ public class JobseekerProfileController {
 
 
     @RequestMapping(value = "/jobseekerProfile", method = RequestMethod.POST)
-    public String addProfile(@ModelAttribute("jobseeker") Job_seeker jobseeker,
-                             HttpServletRequest request,
-                             Model model,
-                             HttpSession session) throws Exception {
+    public String addProfile(Model model, HttpSession session,@ModelAttribute("jobseeker") Job_seeker jobseeker,
+                             HttpServletRequest request
+                            ) throws Exception {
         try {
             jobseeker.setActivated(0);
 
@@ -120,10 +119,9 @@ public class JobseekerProfileController {
     }
 
     @RequestMapping(value = "/jobseekerProfile/edit",  method = RequestMethod.POST)
-    public String editProfile(@ModelAttribute("jobseeker") Job_seeker jobseeker,
-                             HttpServletRequest request,
-                             Model model,
-                             HttpSession session) throws Exception {
+    public String editProfile(Model model, HttpSession session,@ModelAttribute("jobseeker") Job_seeker jobseeker,
+                             HttpServletRequest request
+                             ) throws Exception {
 
         log.debug("---------------------inside update profile");
         log.debug("update profiel for id:"+jobseeker.getId());
@@ -161,16 +159,16 @@ public class JobseekerProfileController {
 
 
     @RequestMapping(value = "/jobseekerVerify", method = RequestMethod.GET)
-    public String verifyJobseekerPage(Model model, @RequestParam("jobseeker_id") String jobseeker_id) {
+    public String verifyJobseekerPage(Model model, HttpSession session, @RequestParam("jobseeker_id") String jobseeker_id) {
         model.addAttribute("jobseeker_id", jobseeker_id);
         return "verify";
     }
 
     @RequestMapping(value = "/jobseekerVerify", method = RequestMethod.POST)
-    public String verifyJobseekerToken(HttpServletRequest request,
+    public String verifyJobseekerToken(Model model, HttpSession session,HttpServletRequest request,
                                      @ModelAttribute("jobseeker_id") Long jobseeker_id,
-                                     @ModelAttribute("token") String token,
-                                     Model model) throws Exception {
+                                     @ModelAttribute("token") String token
+                                    ) throws Exception {
 
         List<Job_Seeker_Token> jobseeker_tokens = jobseekertokenRepository.findByJobseekerAndToken(jobseekerRepository.findOne(jobseeker_id), token);
         if (jobseeker_tokens.size() == 1) {

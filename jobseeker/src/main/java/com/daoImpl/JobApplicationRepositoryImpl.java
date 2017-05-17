@@ -29,8 +29,6 @@ public class JobApplicationRepositoryImpl  {
         return new Long(1);
     }
 
-    //check for any active (not terminated ) application for same postiion adn same jobseeker
-    //Job_application findByJobseekerAndStatusAndPosition(Job_seeker jobseeker, int status , Position position);
 
     Job_application findByJobseekerAndPosition(Job_seeker jobseeker, Position position){
         return null;

@@ -1,6 +1,7 @@
 package com.controller;
 
 import com.dao.ListingRepository;
+import com.daoImpl.ListingRepositoryImpl;
 import com.models.Company;
 import com.models.Position;
 import com.models.SearchClass;
@@ -33,19 +34,22 @@ public class ListingController {
     @Autowired
     ListingRepository listingRepository;
 
+    @Autowired
+    private ListingRepositoryImpl ListingRepositoryImpl;
+
     @RequestMapping(value = "/jobListing", method = RequestMethod.GET)
-    public String jobListing(Model model) {
+    public String jobListing(Model model, HttpSession session, @RequestParam(name = "p", defaultValue = "1") int pageNumber) {
         List<Company> allCompanies = listingRepository.findDistinctCompany();
-        List<Position> allPositions = listingRepository.findAll();
         List<String> allLocations = listingRepository.findDistinctLocation();
         model.addAttribute("allCompanies", allCompanies);
-        model.addAttribute("allPositions", allPositions);
         model.addAttribute("allLocations", allLocations);
+        List<Position> allPositions = ListingRepositoryImpl.getPage(pageNumber);
+        model.addAttribute("allPositions", allPositions);
         return "joblisting";
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
-    public String searchJobListing(Model model, HttpResponse response, @RequestBody SearchClass searchClass, final RedirectAttributes redirectAttributes, HttpSession session) throws Exception {
+    public String searchJobListing(Model model, HttpSession session, HttpResponse response, @RequestBody SearchClass searchClass, final RedirectAttributes redirectAttributes) throws Exception {
 
         List<Company> allCompanies = listingRepository.findDistinctCompany();
         List<String> allLocations = listingRepository.findDistinctLocation();

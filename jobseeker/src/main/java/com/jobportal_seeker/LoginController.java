@@ -1,4 +1,4 @@
-package com.controller;
+package com.jobportal_seeker;
 
 import com.dao.JobSeekerRepository;
 import com.models.Job_seeker;
@@ -22,7 +22,7 @@ public class LoginController {
 
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String login(HttpSession session)
+    public String login(Model model, HttpSession session)
     {
         if(session.getAttribute("jobseeker")!=null)
             return "redirect:/jobListing";
@@ -30,7 +30,7 @@ public class LoginController {
             return "login";
     }
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public String logout(HttpSession session)
+    public String logout(Model model, HttpSession session)
     {
         if(session.getAttribute("jobseeker")!=null)
             session.removeAttribute("jobseeker");
@@ -40,10 +40,10 @@ public class LoginController {
 
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String verify_login(HttpServletRequest request,
+    public String verify_login(Model model, HttpSession session,HttpServletRequest request,
                                @ModelAttribute("email") String email,
-                               @ModelAttribute("password") String password,
-                               Model model, HttpSession session) {
+                               @ModelAttribute("password") String password
+                              ) {
 
         Job_seeker jobseeker = jobSeekerRepository.findByEmail(email);
         if(jobseeker != null) {
