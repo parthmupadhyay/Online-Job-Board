@@ -38,7 +38,7 @@ public class ListingController {
     private ListingRepositoryImpl ListingRepositoryImpl;
 
     @RequestMapping(value = "/jobListing", method = RequestMethod.GET)
-    public String jobListing(Model model, @RequestParam(name = "p", defaultValue = "1") int pageNumber) {
+    public String jobListing(Model model, HttpSession session, @RequestParam(name = "p", defaultValue = "1") int pageNumber) {
         List<Company> allCompanies = listingRepository.findDistinctCompany();
         List<String> allLocations = listingRepository.findDistinctLocation();
         model.addAttribute("allCompanies", allCompanies);
@@ -49,7 +49,7 @@ public class ListingController {
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
-    public String searchJobListing(Model model, HttpResponse response, @RequestBody SearchClass searchClass, final RedirectAttributes redirectAttributes, HttpSession session) throws Exception {
+    public String searchJobListing(Model model, HttpSession session, HttpResponse response, @RequestBody SearchClass searchClass, final RedirectAttributes redirectAttributes) throws Exception {
 
         List<Company> allCompanies = listingRepository.findDistinctCompany();
         List<String> allLocations = listingRepository.findDistinctLocation();

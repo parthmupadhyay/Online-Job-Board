@@ -62,9 +62,9 @@ public class JobApplicationController {
 
     @RequestMapping(value = "/jobApplication/open", method = RequestMethod.GET)
     public String jobApplication(@PathParam("position_id") Long position_id ,
-                        Model model,
-                        Principal principal,
-                                 HttpSession session)
+                                 HttpSession session,
+                                 Model model,
+                                 Principal principal)
     {
         log.debug("------------------inside jobapplication");
         log.debug("position for which is appling is :"+position_id);
@@ -113,11 +113,12 @@ public class JobApplicationController {
 
 
     @RequestMapping(value="/jobApplication/apply",params="action=applyByProfile",method=RequestMethod.POST)
-    public String action1(
+    public String action1( Model model,
+                             HttpSession session,
                           @RequestParam("position.id") Long position_id,
                           @RequestParam("jobseeker.id") Long jobseeker_id,
                           @RequestParam("company.id") Long company_id,
-                          Model model,
+
                           Principal principal)
     {
         log.debug("Action1 block called");
@@ -139,11 +140,11 @@ public class JobApplicationController {
          return "redirect:/jobListing";
     }
     @RequestMapping(value="/jobApplication/apply",params="action=applyByResume",method=RequestMethod.POST)
-    public String action2(@RequestParam("position.id") Long position_id,
+    public String action2(Model model,
+                          HttpSession session,@RequestParam("position.id") Long position_id,
                           @RequestParam("jobseeker.id") Long jobseeker_id,
                           @RequestParam("company.id") Long company_id,
                           @ModelAttribute("jobApplication") Job_application jobApplication,
-                          Model model,
                           Principal principal)
     {
         log.debug("Action2 block called");
@@ -189,7 +190,7 @@ public class JobApplicationController {
 
 
     @RequestMapping(value="/allApplications" , method=RequestMethod.GET)
-    public String getAllApplications(HttpSession session, Model model){
+    public String getAllApplications(Model model,HttpSession session){
 
         log.debug("----------inside getallapplciations");
         //Job_seeker jobseeker = jobSeekerRepository.findOne(new Long(1)); //testing
@@ -204,7 +205,7 @@ public class JobApplicationController {
     }
 
     @RequestMapping(value="/jobApplication/changeStatus" , method=RequestMethod.POST)
-    public String cancelOrRejectApplication(HttpSession session, Model model,
+    public String cancelOrRejectApplication( Model model, HttpSession session,
                                             @RequestParam(value="action", required=true) String action,
                                            @RequestParam(value="id") String[] selectedApplications,
                                             @RequestParam("jobseeker.id") Long jobseeker_id){
@@ -222,10 +223,7 @@ public class JobApplicationController {
                         model.addAttribute("notRejected", String.join(",", notRejected));
                     }
 
-                    String primaryMsg = "Thank you for your time. Best wishes for your future. " +
-                            "Please feel free to contact again whenever new position fits you.\n\n ";
-                    String sub = "JobPortal: Application Offer Rejected";
-                    sendApplciationRejectionMail(sub, primaryMsg, selectedApplications, notRejected, jobseeker);
+                    sendApplciationRejectionMail(selectedApplications, notRejected, jobseeker);
                     model.addAttribute("rejectionMailSent", true);
 
                 }
@@ -237,9 +235,7 @@ public class JobApplicationController {
                     if (notCancelled.size() > 0) {
                         model.addAttribute("notCancelled", String.join(",", notCancelled));
                     }
-                    String primaryMsg = "Thank you for your response. We hope to see you again. Best wishes!\n\n ";
-                    String sub = "JobPortal: Application Cancelled";
-                    sendApplciationCancellationMail(sub, primaryMsg, selectedApplications, notCancelled, jobseeker);
+                    sendApplciationCancellationMail(selectedApplications, notCancelled, jobseeker);
                     model.addAttribute("cancellationMailSent", true);
                 }
                 break;
@@ -290,7 +286,13 @@ public class JobApplicationController {
         return notCancelled;
     }
 
-    private void sendApplciationRejectionMail(String sub, String primaryMsg , String[] selectedIds,  List<String> notSelectedIds , Job_seeker jobSeeker){
+    private void sendApplciationRejectionMail( String[] selectedIds,  List<String> notSelectedIds , Job_seeker jobSeeker){
+
+
+        String primaryMsg = "Thank you for your time. Best wishes for your future. " +
+                "Please feel free to contact again whenever new position fits you.\n\n ";
+        String sub = "JobPortal: Application Offer Rejected";
+
         String secondaryMsg = (notSelectedIds.size() > 0 )? "\n Applications with application id :"
                 + String.join(",",notSelectedIds) +" cannot be rejected.\n": "";
         for(String id : selectedIds){
@@ -298,12 +300,18 @@ public class JobApplicationController {
                 secondaryMsg += "\n Offers with Application id "+id+" rejected.\n";
             }
         }
+
+        secondaryMsg += "\n\n Regards,\n -JobBoard Recruiting.";
         SimpleMailMessage new_email = mailConstructor.constructApplicationSentEmail(sub,primaryMsg, secondaryMsg ,jobSeeker);
 
         mailSender.send(new_email);
     }
 
-    private void sendApplciationCancellationMail(String sub, String primaryMsg , String[] selectedIds,  List<String> notSelectedIds , Job_seeker jobSeeker){
+    private void sendApplciationCancellationMail(String[] selectedIds,  List<String> notSelectedIds , Job_seeker jobSeeker){
+
+        String primaryMsg = "Thank you for your response. We hope to see you again. Best wishes!\n\n ";
+        String sub = "JobPortal: Application Cancelled";
+
         String secondaryMsg = (notSelectedIds.size() > 0 )? "\n Applications with application id :"
                 + String.join(",",notSelectedIds) +" cannot be cancelled.\n": "";
         for(String id : selectedIds){
@@ -311,6 +319,7 @@ public class JobApplicationController {
                 secondaryMsg += "\n Applciation id "+id+" cancelled.\n";
             }
         }
+        secondaryMsg += "\n\n Regards,\n -JobBoard Recruiting.";
         SimpleMailMessage new_email = mailConstructor.constructApplicationSentEmail(sub,primaryMsg, secondaryMsg ,jobSeeker);
 
         mailSender.send(new_email);
@@ -320,7 +329,9 @@ public class JobApplicationController {
 
         String secondaryMsg = "\nYour job details are as follows:\n"+
                 "\nDescription:\n" + position.getDescription() +
-                "\nResponsibilities:\n" + position.getResponsibilities();
+                "\nResponsibilities:\n" + position.getResponsibilities()+
+                "\n\n Regards,"+
+                "\n"+position.getCompany().getName() +" Recruting.";
         SimpleMailMessage new_email = mailConstructor.constructApplicationSentEmail(sub,primaryMsg, secondaryMsg , jobseeker);
 
         mailSender.send(new_email);
