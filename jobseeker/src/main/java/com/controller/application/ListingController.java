@@ -1,4 +1,4 @@
-package com.controller;
+package com.controller.application;
 
 import com.dao.ListingRepository;
 import com.daoImpl.ListingRepositoryImpl;

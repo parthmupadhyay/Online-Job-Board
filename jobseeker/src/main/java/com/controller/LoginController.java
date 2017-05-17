@@ -1,4 +1,4 @@
-package com.jobportal_seeker;
+package com.controller;
 
 import com.dao.JobSeekerRepository;
 import com.models.Job_seeker;

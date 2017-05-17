@@ -1,8 +1,6 @@
 package com.aop;
 
-import com.controller.JobApplicationController;
 import com.models.Job_seeker;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -22,7 +20,7 @@ public class SecurityAspect
 {
     @Pointcut("within(@org.springframework.stereotype.Controller *) && " +
                     "@annotation(requestMapping) && " +
-                    "execution(* com.controller.*.*(..))"
+                    "execution(* com.controller.application.*.*(..))"
     )
     public void controller(RequestMapping requestMapping) {}
 

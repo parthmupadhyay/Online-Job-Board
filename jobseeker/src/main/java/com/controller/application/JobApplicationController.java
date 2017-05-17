@@ -1,9 +1,8 @@
-package com.controller;
+package com.controller.application;
 
 import com.dao.JobApplicationRepository;
 import com.dao.JobSeekerRepository;
 import com.dao.PositionRepository;
-import com.daoImpl.JobApplicationRepositoryImpl;
 import com.models.Company;
 import com.models.Job_application;
 import com.models.Job_seeker;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -239,7 +237,21 @@ public class JobApplicationController {
                     model.addAttribute("cancellationMailSent", true);
                 }
                 break;
+            case "accept":
+                log.debug("accept");
+                if(selectedApplications.length > 0) {
+                    List<String> notAccepted = performAccept(selectedApplications);
+                    if (notAccepted.size() > 0) {
+                        model.addAttribute("notAccepted", String.join(",", notAccepted));
+                    }
+                    if(selectedApplications.length !=  notAccepted.size())//if not a single offer accepted dont send mail
+                    {
+                        sendApplciationAcceptMail(selectedApplications, notAccepted, jobseeker);
+                        model.addAttribute("acceptOfferMailSent", true);
+                    }
 
+                }
+                break;
             default:
                 // do stuff
 
@@ -286,6 +298,20 @@ public class JobApplicationController {
         return notCancelled;
     }
 
+    private List<String> performAccept(String[] selectedApplications) {
+        List<String> notCancelled = new ArrayList<String>();
+        for(String id: selectedApplications){
+            Job_application jobApplication = jobApplicationRepository.findOne(Long.parseLong(id));
+            if(jobApplication.getStatus() == 1){
+                jobApplication.setStatus(3);//offer acccepted
+                jobApplicationRepository.save(jobApplication);
+
+            }else{
+                notCancelled.add(id);
+            }
+        }
+        return notCancelled;
+    }
     private void sendApplciationRejectionMail( String[] selectedIds,  List<String> notSelectedIds , Job_seeker jobSeeker){
 
 
@@ -325,6 +351,23 @@ public class JobApplicationController {
         mailSender.send(new_email);
     }
 
+    private void sendApplciationAcceptMail(String[] selectedIds,  List<String> notSelectedIds , Job_seeker jobSeeker){
+
+        String primaryMsg = "Congratulations! Thank you for your acceptance. We are happy to take you onboard!\n\n ";
+        String sub = "JobPortal: Application Offer Accepted";
+
+        String secondaryMsg = (notSelectedIds.size() > 0 )? "\n Applications with application id :"
+                + String.join(",",notSelectedIds) +" cannot be accepted.\n": "";
+        for(String id : selectedIds){
+            if(!notSelectedIds.contains(id)){
+                secondaryMsg += "\n Application id "+id+" accepted.\n";
+            }
+        }
+        secondaryMsg += "\n\n Regards,\n -JobBoard Recruiting.";
+        SimpleMailMessage new_email = mailConstructor.constructApplicationSentEmail(sub,primaryMsg, secondaryMsg ,jobSeeker);
+
+        mailSender.send(new_email);
+    }
     private void sendApplicationNotification(String sub ,String primaryMsg, Position position, Job_seeker jobseeker){
 
         String secondaryMsg = "\nYour job details are as follows:\n"+

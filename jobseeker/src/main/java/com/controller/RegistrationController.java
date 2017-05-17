@@ -3,8 +3,6 @@ package com.controller;
 import com.dao.CompanyRepository;
 import com.dao.JobSeekerRepository;
 import com.dao.JobSeekerTokenRepository;
-import com.models.Company;
-import com.models.Company_token;
 import com.models.Job_Seeker_Token;
 import com.models.Job_seeker;
 import com.utility.MailConstructor;
@@ -36,9 +34,9 @@ import java.util.UUID;
 
 @Controller
 @ComponentScan(value = "com.dao")
-public class JobseekerProfileController {
+public class RegistrationController {
 
-    private static final Logger log = LoggerFactory.getLogger(JobseekerProfileController.class);
+    private static final Logger log = LoggerFactory.getLogger(RegistrationController.class);
     @Autowired
     JobSeekerRepository jobseekerRepository;
 
@@ -105,56 +103,6 @@ public class JobseekerProfileController {
         jobseeker.setPassword("");
         model.addAttribute("verificationEmailSent", true);
         return "jobseekerProfile";
-    }
-
-    @RequestMapping(value = "/jobseekerProfile/view", method = RequestMethod.GET)
-    public String viewProfile(Model model,
-                              HttpSession session) {
-
-        //Job_seeker jobseeker = jobseekerRepository.findOne(new Long(1)); //testing
-        Job_seeker jobseeker = (Job_seeker) session.getAttribute("jobseeker");
-        log.debug("jobseeker to be edited:"+jobseeker.getId());
-        model.addAttribute("jobseeker", jobseeker);
-        return "updateProfile";
-    }
-
-    @RequestMapping(value = "/jobseekerProfile/edit",  method = RequestMethod.POST)
-    public String editProfile(Model model, HttpSession session,@ModelAttribute("jobseeker") Job_seeker jobseeker,
-                             HttpServletRequest request
-                             ) throws Exception {
-
-        log.debug("---------------------inside update profile");
-        log.debug("update profiel for id:"+jobseeker.getId());
-        Job_seeker jobseeker_ = jobseekerRepository.findOne(jobseeker.getId());
-        //only update the info fields
-        jobseeker_.setFirst_name(jobseeker.getFirst_name());
-        jobseeker_.setLast_name(jobseeker.getLast_name());
-        jobseeker_.setIntroduction(jobseeker.getIntroduction());
-        jobseeker_.setEducation(jobseeker.getEducation());
-        jobseeker_.setSkills(jobseeker.getSkills());
-        if(jobseeker.getProfilePic() != null){
-            try{
-                MultipartFile profilePic = (MultipartFile) jobseeker.getProfilePic();
-                String name = jobseeker.getId() + ".png";
-
-                byte[] bytes = profilePic.getBytes();
-
-                BufferedOutputStream stream = new BufferedOutputStream(
-                        new FileOutputStream(new File("src/main/resources/static/images/profilePic/" + name)));
-                stream.write(bytes);
-                stream.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        jobseekerRepository.save(jobseeker_);
-
-        //update the page and session with latest data
-        session.setAttribute("jobseeker",jobseeker_);
-        log.debug("jobseeker  updated:"+jobseeker.getId());
-        model.addAttribute("jobseeker", jobseeker);
-        return "updateProfile";
     }
 
 

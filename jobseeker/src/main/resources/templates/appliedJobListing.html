@@ -66,13 +66,17 @@
             <div role="alert"><label class="alert alert-success" th:if="${cancellationMailSent} == true">
                 Application cancellation E-mail has been sent successfully !</label>
             </div>
-
+            <div role="alert"><label class="alert alert-success" th:if="${acceptOfferMailSent} == true">
+                Application offer accept E-mail has been sent successfully !</label>
+            </div>
+            <label class="alert alert-danger" th:if="${notAccepted}">Applications with ids <span th:text="${notAccepted}"></span>cannot be accepted.</label>
             <label class="alert alert-danger" th:if="${notCancelled}">Applications with ids <span th:text="${notCancelled}"></span>cannot be cancelled.</label>
             <label class="alert alert-danger" th:if="${notRejected}"> Applications with ids <span th:text="${notRejected}"></span>cannot be rejected.</label>
 
 
                 <div class="row">
                     <div class="col-xs-6 pull-right" style="margin: 0px 20px 20px 20px;">
+                        <button type="submit" class="btn btn-success" style="color:black;border:1px solid black; padding: 10px 40px 10px 40px;margin: 10px 10px 10px 0px;" name="action" value="accept" >Accept</button>
                         <button type="submit" class="btn btn-danger" style="color:black;border:1px solid black; padding: 10px 40px 10px 40px;margin: 10px 10px 10px 0px;" name="action" value="cancel" >Cancel</button>
                         <button type="submit" class="btn btn-danger" style="color:black;border:1px solid black; padding: 10px 40px 10px 40px;margin: 10px 10px 10px 0px;" name="action" value="reject" >Reject</button>
                     </div>
