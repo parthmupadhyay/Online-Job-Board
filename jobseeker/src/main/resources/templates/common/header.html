@@ -33,7 +33,7 @@
                                     <!-- dropdown end -->
                                 </li>
                                 <li class="dropdown"  th:if="${session.jobseeker}" >
-                                    <a href="blog.html">Hey,  <span th:text="${session.jobseeker}? ${#strings.toUpperCase(sesison.jobseeker.first_name)} : 'Job Seeker'"></span> <span class="caret"></span></a>
+                                    <a href="blog.html">Hey,  <span th:text="${session.jobseeker}? ${#strings.toUpperCase(jobseeker.first_name)} : 'Job Seeker'"></span> <span class="caret"></span></a>
                                     <!-- dropdown start -->
                                     <ul class="dropdown-menu">
                                         <li><a th:href="@{/jobseekerProfile/view}">View/Edit Profile</a></li>
