@@ -98,6 +98,14 @@
                         </ul>
                     </div>
                     <!-- Top Companies end -->
+                    <div>
+                        <input type="text" th:id="minSalary" class="form-control"
+                               placeholder="Minimum Salary"/> <br/>
+
+                        <input type="text" th:id="maxSalary" class="form-control"
+                               placeholder="Maximum Salary"/> <br/>
+
+                    </div>
 
                     <!-- button -->
                     <div class="searchnt">
@@ -120,14 +128,16 @@
                             <div class="col-md-10 col-sm-8">
                                 <div class="jobimg"><img src="/images/jobs/jobimg.jpg" alt="Job Name"/></div>
                                 <div class="jobinfo">
-                                    <h3><a th:href="@{/jobApplication/open?id=}+${position.id}"><span th:text="${position.title}"></span></a></h3>
+                                    <h3><a th:href="@{/jobApplication/open?id=}+${position.id}"><span
+                                            th:text="${position.title}"></span></a></h3>
                                     <div class="location"><span th:text="${position.location}"></span></div>
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
                             <div class="col-md-2 col-sm-4">
                                 <!--<div class="listbtn"><a th:href="@{/jobApplication?id=${position.id}">Apply Now</a></div> -->
-                                <div class="listbtn" ><a th:href="@{/jobApplication/open(position_id=${position.id})}">Apply Now</a></div>
+                                <div class="listbtn"><a th:href="@{/jobApplication/open(position_id=${position.id})}">Apply
+                                    Now</a></div>
                             </div>
                         </div>
                         <p th:text="${position.description}"></p>

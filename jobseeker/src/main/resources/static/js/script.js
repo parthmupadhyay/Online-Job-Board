@@ -73,9 +73,14 @@ $(document).ready(function () {
         var search = [];
         search.push(searchQuery);
 
-        console.log(searchQuery);
-        console.log(locationList);
-        console.log(companiesList);
+        var minSalary = document.getElementById("minSalary").value;
+        var maxSalary = document.getElementById("maxSalary").value;
+
+        var salary = [];
+        salary.push(minSalary);
+        salary.push(maxSalary);
+
+
         /*<![CDATA[*/
         var path = /*[[@{/}]]*/'search';
         /*]]>*/
@@ -83,10 +88,10 @@ $(document).ready(function () {
         $.ajax({
             type: 'POST',
             url: path,
-            data: JSON.stringify({company: companiesList, location: locationList, search: search}),
+            data: JSON.stringify({company: companiesList, location: locationList, search: search,salary:salary}),
             contentType: 'application/json;charset=utf-8',
             success: function (res) {
-            location.href="http://localhost:8081/joblisting"
+                location.href = "http://localhost:8081/joblisting"
             },
             error: function (res) {
                 console.log(res);
@@ -117,9 +122,13 @@ $(document).ready(function () {
         var search = [];
         search.push(searchQuery);
 
-        console.log(searchQuery);
-        console.log(locationList);
-        console.log(companiesList);
+        var minSalary = document.getElementById("minSalary").value;
+        var maxSalary = document.getElementById("maxSalary").value;
+
+        var salary = [];
+        salary.push(minSalary);
+        salary.push(maxSalary);
+
         /*<![CDATA[*/
         var path = /*[[@{/}]]*/'search';
         /*]]>*/
@@ -127,10 +136,10 @@ $(document).ready(function () {
         $.ajax({
             type: 'POST',
             url: path,
-            data: JSON.stringify({company: companiesList, location: locationList, search: search}),
+            data: JSON.stringify({company: companiesList, location: locationList, search: search, salary: salary}),
             contentType: 'application/json;charset=utf-8',
             success: function (res) {
-                location.href="http://localhost:8081/joblisting"
+                location.href = "http://localhost:8081/joblisting"
             },
             error: function (res) {
                 console.log(res);

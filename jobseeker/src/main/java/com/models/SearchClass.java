@@ -11,6 +11,7 @@ public class SearchClass {
     private ArrayList<Long> company;
     private ArrayList<String> location;
     private ArrayList<String> search;
+    private ArrayList<String> salary;
 
     public ArrayList<Long> getCompany() {
         return company;
@@ -36,4 +37,11 @@ public class SearchClass {
         this.search = search;
     }
 
+    public ArrayList<String> getSalary() {
+        return salary;
+    }
+
+    public void setSalary(ArrayList<String> salary) {
+        this.salary = salary;
+    }
 }

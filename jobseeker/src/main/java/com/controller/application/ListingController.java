@@ -51,6 +51,7 @@ public class ListingController {
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public String searchJobListing(Model model, HttpSession session, HttpResponse response, @RequestBody SearchClass searchClass, final RedirectAttributes redirectAttributes) throws Exception {
 
+        System.out.println(searchClass.getSalary());
         List<Company> allCompanies = listingRepository.findDistinctCompany();
         List<String> allLocations = listingRepository.findDistinctLocation();
         List<Position> allPositions=null;
