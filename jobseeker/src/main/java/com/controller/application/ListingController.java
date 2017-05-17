@@ -51,7 +51,19 @@ public class ListingController {
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public String searchJobListing(Model model, HttpSession session, HttpResponse response, @RequestBody SearchClass searchClass, final RedirectAttributes redirectAttributes) throws Exception {
 
-        System.out.println(searchClass.getSalary());
+        System.out.println("Salary:    "+searchClass.getSalary());
+        int minPrice=0;
+        int maxPrice=0;
+        if(searchClass.getSalary()!=null)
+        {
+            minPrice = Integer.parseInt(searchClass.getSalary().get(0));
+            maxPrice = Integer.parseInt(searchClass.getSalary().get(1));
+        }
+        else
+        {
+            minPrice=0;
+            maxPrice=Integer.MAX_VALUE;
+        }
         List<Company> allCompanies = listingRepository.findDistinctCompany();
         List<String> allLocations = listingRepository.findDistinctLocation();
         List<Position> allPositions=null;
@@ -61,15 +73,19 @@ public class ListingController {
         String query = searchQuery.get(0);
         if(!searchLocation.isEmpty()&&!searchCompany.isEmpty())
         {
-            allPositions = listingRepository.filterData(searchClass.getLocation(),searchClass.getCompany(),query);
+            allPositions = listingRepository.filterData(searchClass.getLocation(),searchClass.getCompany(),query,minPrice,maxPrice);
         }
         else if(!searchLocation.isEmpty())
         {
-            allPositions=listingRepository.filterByLocation(searchLocation);
+            allPositions=listingRepository.filterByLocation(searchLocation,query,minPrice,maxPrice);
         }
         else if(!searchCompany.isEmpty())
         {
-            allPositions=listingRepository.filterByCompany(searchCompany);
+            allPositions=listingRepository.filterByCompany(searchCompany,query,minPrice,maxPrice);
+        }
+        else if(searchClass.getSalary()!=null||!query.isEmpty())
+        {
+            allPositions=listingRepository.findByQuery(query,minPrice,maxPrice);
         }
         else
             allPositions=listingRepository.findAll();
@@ -79,8 +95,7 @@ public class ListingController {
         return "joblisting";
     }
 
-
-    @RequestMapping(value = "/search/query",method = RequestMethod.POST)
+    /*@RequestMapping(value = "/search/query",method = RequestMethod.POST)
     public String searchJobByQuery(@RequestParam String query,HttpSession session,Model model)
     {
         System.out.print("Query:"+query);
@@ -92,7 +107,7 @@ public class ListingController {
         model.addAttribute("allLocations", allLocations);
         model.addAttribute("allPositions", allPositions);
         return "joblisting";
-    }
+    }*/
 
     @RequestMapping(value = "/joblisting")
     public String jobListingAfterFilters(Model model, HttpSession session) {

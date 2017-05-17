@@ -25,18 +25,17 @@ public interface ListingRepository extends PagingAndSortingRepository<Position, 
 
     List<Position> findAll();
 
-    @Query("SELECT p from Position p WHERE p.location in (:location) and p.company.id in (:company) and (p.title like %:query% or p.company.name like %:query% or p.description like %:query% or p.location like %:query%)")
-    List<Position> filterData(@Param("location") List<String> location,@Param("company") List<Long> company,@Param("query") String query);
+    @Query("SELECT p from Position p WHERE p.location in (:location) and p.company.id in (:company) and (p.title like %:query% or p.company.name like %:query% or p.description like %:query% or p.location like %:query%) and p.salary between :minPrice and :maxPrice")
+    List<Position> filterData(@Param("location") List<String> location,@Param("company") List<Long> company,@Param("query") String query,@Param("minPrice") int minPrice,@Param("maxPrice") int maxPrice);
 
-    @Query("SELECT p from Position p WHERE p.company.id in (:company)")
-    List<Position> filterByCompany(@Param("company") List<Long> company);
+    @Query("SELECT p from Position p WHERE p.company.id in (:company) and (p.title like %:query% or p.company.name like %:query% or p.description like %:query% or p.location like %:query%) and p.salary between :minPrice and :maxPrice")
+    List<Position> filterByCompany(@Param("company") List<Long> company,@Param("query") String query,@Param("minPrice") int minPrice,@Param("maxPrice") int maxPrice);
 
-    @Query("SELECT p from Position p WHERE p.location in (:location)")
-    List<Position> filterByLocation(@Param("location") List<String> location);
+    @Query("SELECT p from Position p WHERE p.location in (:location) and (p.title like %:query% or p.company.name like %:query% or p.description like %:query% or p.location like %:query%) and p.salary between :minPrice and :maxPrice")
+    List<Position> filterByLocation(@Param("location") List<String> location,@Param("query") String query,@Param("minPrice") int minPrice,@Param("maxPrice") int maxPrice);
 
-    @Query("SELECT p from Position p where p.title like %:query% or p.company.name like %:query% or p.description like %:query% or p.location like %:query%")
-    List<Position> findByQuery(@Param("query") String query);
-
+    @Query("SELECT p from Position p where (p.title like %:query% or p.company.name like %:query% or p.description like %:query% or p.location like %:query%) and p.salary between :minPrice and :maxPrice")
+    List<Position> findByQuery(@Param("query") String query,@Param("minPrice") int minPrice,@Param("maxPrice") int maxPrice);
 
 
 }
