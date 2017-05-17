@@ -74,7 +74,7 @@
                 <button class="btn btn-danger" type="submit" >Cancel Position</button>
                 </form>
                 </div>
-                <div class="col-md-3" th:if="${!position.jobapplications.empty}">
+                <div class="col-md-3" th:if="${!position.jobapplications.empty and position.status==0}">
                     <a th:href="@{'/applications/'+${position.id}}"> <button class="btn btn-primary" type="button" >View Applications</button></a>
 
                 </div>
