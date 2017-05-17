@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -41,5 +42,23 @@ public class ApplicationController
         Job_application jobapplication=applicationRepository.findOne(id);
         model.addAttribute("jobapplication",jobapplication);
         return "jobapplication";
+    }
+
+    @RequestMapping(value = "/application/reject/{id}",method = RequestMethod.GET)
+    public String rejectApplication(@PathVariable int id, HttpSession session)
+    {
+        Job_application application=applicationRepository.findOne(id);
+        application.setStatus(2);
+        applicationRepository.save(application);
+        return "redirect:/jobapplication/"+id;
+    }
+
+    @RequestMapping(value = "/application/offer/{id}",method = RequestMethod.GET)
+    public String makeOffer(@PathVariable int id, HttpSession session)
+    {
+        Job_application application=applicationRepository.findOne(id);
+        application.setStatus(1);
+        applicationRepository.save(application);
+        return "redirect:/jobapplication/"+id;
     }
 }
