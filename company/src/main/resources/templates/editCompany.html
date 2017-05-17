@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+
+    <title>Online Job Portal - New Job</title>
+    <!-- Fav Icon -->
+    <link rel="shortcut icon" href="favicon.ico"/>
+
+    <!-- Owl carousel -->
+    <link href="/css/owl.carousel.css" rel="stylesheet"/>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Font Awesome -->
+    <link href="/css/font-awesome.css" rel="stylesheet"/>
+
+    <!-- Custom Style -->
+    <link href="/css/main.css" rel="stylesheet"/>
+</head>
+<body>
+<!-- Header start -->
+
+<div th:replace="common/header :: header"/>
+<!-- Header end -->
+
+<div class="pageTitle">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-6">
+                <h1>Edit Company Details</h1>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="listpgWraper">
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <form method="post" action="/company/profile/edit" enctype="multipart/form-data">
+            <input type="hidden" name="id" th:value="${company.id}"/>
+        <div class="userccount">
+            <div class="row">
+                <div class="col-md-3">
+                    <h6>Company Name:</h6>
+                </div>
+                <div class="col-md-9 formrow">
+                    <input class="form-control" type="text"  name ="name" th:value="${company.name}"/>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-3">
+                    <h6>Website:</h6>
+                </div>
+                <div class="col-md-9 formrow">
+                    <input class="form-control" type="text"  name ="website" th:value="${company.website}"/>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-3">
+                    <h6>HQ Address:</h6>
+                </div>
+                <div class="col-md-9 formrow">
+                    <input type="text" class="form-control"  name ="hq_address" th:value="${company.hq_address}"/>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-3">
+                    <h6>Description:</h6>
+                </div>
+                <div class="col-md-9 formrow">
+                    <textarea class="form-control" name ="description" th:field="${company.description}" th:value="${company.description}"/>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-3">
+                    <h6>Upload new Logo</h6>
+                </div>
+                <div class="col-md-9">
+                    <div class="formrow">
+                        <input type="file" id="file" name="logo_url" class="form-control" value=""/>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5"></div>
+                <div class="col-md-2">
+                    <button class="btn btn-success" type="submit">Save Changes</button>
+                </div>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+
+
+<!--Footer-->
+
+<div th:replace="common/footer :: footer"/>
+<!--Footer end-->
+
+<!--Copyright-->
+<div class="copyright">
+    <div class="container">
+        <div class="bttxt">Copyright &copy; 2017 Your Company Name. All Rights Reserved. Design by: <a
+                href="http://graphicriver.net/user/ecreativesol" target="_blank">eCreativeSolutions</a></div>
+    </div>
+</div>
+
+<!-- Bootstrap's JavaScript -->
+<script src="/js/jquery-2.1.4.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Owl carousel -->
+<script src="/js/owl.carousel.js"></script>
+
+<!-- Custom js -->
+<script src="/js/script.js"></script>
+</body>
+</html>
