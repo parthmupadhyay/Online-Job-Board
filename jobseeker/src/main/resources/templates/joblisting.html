@@ -130,6 +130,7 @@
                                 <div class="jobinfo">
                                     <h3><a th:href="@{/jobApplication/open(position_id=${position.id})}"><span
                                             th:text="${position.title}"></span></a></h3>
+                                    <h5><span  th:text="${position.company.name}"></span></h5>
                                     <div class="location"><span th:text="${position.location}"></span></div>
                                 </div>
                                 <div class="clearfix"></div>

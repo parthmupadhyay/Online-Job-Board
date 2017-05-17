@@ -20,23 +20,20 @@
                     <div class="navbar navbar-default" role="navigation">
                         <div class="navbar-collapse collapse" id="nav-main">
                             <ul class="nav navbar-nav">
-                                <li><a th:href="@{/jobListing}"> <span th:text="${jobseeker}? 'Home' : ''"></span> </a></li>
-                                <li><a th:href="@{/aboutus}"> <span th:text="${jobseeker}? 'About us' : ''"></span></a></li>
-                                <li><a th:href="@{/contactus}"> <span th:text="${jobseeker}? 'Contact us' : ''"></span></a></li>
-                                <li class="dropdown" th:if="${jobseeker}"><a href="#."> <span th:text="${jobseeker}? 'Pages' : ''"></span> <span class="caret"></span></a>
+                                <li><a th:href="@{/jobListing}"> <span th:text="${session.jobseeker}? 'Home' : ''"></span> </a></li>
+                                <li><a th:href="@{/aboutus}"> <span th:text="${session.jobseeker}? 'About us' : ''"></span></a></li>
+                                <li><a th:href="@{/contactus}"> <span th:text="${session.jobseeker}? 'Contact us' : ''"></span></a></li>
+                                <li class="dropdown" th:if="${session.jobseeker}"><a href="#."> <span th:text="${session.jobseeker}? 'Pages' : ''"></span> <span class="caret"></span></a>
                                     <!-- dropdown start -->
                                     <ul class="dropdown-menu">
-                                        <li><a th:href="@{/about-us}">About Us</a></li>
                                         <li class="active"><a th:href="@{/}">Login</a></li>
                                         <li><a th:href="@{/jobseekerProfile}">Register</a></li>
                                         <li><a th:href="@{/jobListing}">Job Listing</a></li>
-                                        <li><a href="faqs.html">FAQs</a></li>
-                                        <li><a href="404.html">404 Page</a></li>
-                                        <li><a href="typography.html">Typography</a></li>
                                     </ul>
                                     <!-- dropdown end -->
                                 </li>
-                                <li class="dropdown" ><a href="blog.html">Hey,  <span th:text="${jobseeker}? ${#strings.toUpperCase(jobseeker.first_name)} : 'Job Seeker'"></span> <span class="caret"></span></a>
+                                <li class="dropdown"  th:if="${session.jobseeker}" >
+                                    <a href="blog.html">Hey,  <span th:text="${jobseeker}? ${#strings.toUpperCase(jobseeker.first_name)} : 'Job Seeker'"></span> <span class="caret"></span></a>
                                     <!-- dropdown start -->
                                     <ul class="dropdown-menu">
                                         <li><a th:href="@{/jobseekerProfile/view}">View/Edit Profile</a></li>

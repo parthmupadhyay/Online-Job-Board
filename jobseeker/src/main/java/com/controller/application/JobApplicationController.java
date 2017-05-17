@@ -150,9 +150,11 @@ public class JobApplicationController {
         log.debug("position for which is appling is :"+position_id);
         log.debug("jobseeker id is :"+jobseeker_id);
         String resume_path= "src/main/resources/static/resume/";
+
         try{
             MultipartFile resume = (MultipartFile) jobApplication.getResume_file();
             String name = jobseeker_id +"-" + position_id + ".pdf";
+            jobApplication.setResume_url(name);
             log.debug("name is :"+name);
             byte[] bytes = resume.getBytes();
             resume_path +=  name;
@@ -173,7 +175,7 @@ public class JobApplicationController {
         jobApplication.setPosition(position);
         jobApplication.setJobseeker(jobseeker);
         jobApplication.setStatus(status);
-        jobApplication.setResume_url(resume_path);
+
         jobApplicationRepository.save(jobApplication);
 
 
