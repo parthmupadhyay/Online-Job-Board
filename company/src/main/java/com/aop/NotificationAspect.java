@@ -1,5 +1,6 @@
 package com.aop;
 
+import com.dao.ApplicationRepository;
 import com.dao.PositionRepository;
 import com.models.Company;
 import com.models.Job_application;
@@ -7,6 +8,7 @@ import com.models.Job_seeker;
 import com.models.Position;
 import com.utility.NotificationService;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,18 @@ public class NotificationAspect
 
     @Autowired
     PositionRepository positionRepository;
+
+    @Autowired
+    ApplicationRepository applicationRepository;
+
+    @After("execution(* com.controller.ApplicationController.makeOffer(..))")
+    public void afterMakeOffer(JoinPoint joinPoint) throws Exception
+    {
+        Object args[]=joinPoint.getArgs();
+        Job_application application=applicationRepository.findOne((int)args[0]);
+        String message="Congratulations , You have been selected for position : "+application.getPosition().getTitle();
+        notificationService.sendNotificaitoin(application.getJob_seeker(),application.getPosition(),application.getPosition().getCompany(),message);
+    }
 
     @AfterReturning(pointcut = "execution(* com.controller.PositionController.updatePosition(..))", returning="returnString")
     public void afterPositionUpdate(JoinPoint joinPoint,String returnString)
