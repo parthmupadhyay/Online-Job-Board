@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+
+    <title>Online Job Portal - New Job</title>
+    <!-- Fav Icon -->
+    <link rel="shortcut icon" href="favicon.ico"/>
+
+    <!-- Owl carousel -->
+    <link href="/css/owl.carousel.css" rel="stylesheet"/>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Font Awesome -->
+    <link href="/css/font-awesome.css" rel="stylesheet"/>
+
+    <!-- Custom Style -->
+    <link href="/css/main.css" rel="stylesheet"/>
+</head>
+<body>
+<!-- Header start -->
+
+<div th:replace="common/header :: header"/>
+<!-- Header end -->
+
+<div class="pageTitle">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-6">
+                <h1>Company Details</h1>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="listpgWraper">
+<div class="container job-header">
+    <div class="jobinfo">
+        <div class="row">
+            <div class="col-md-8 col-sm-8">
+                <!-- Candidate Info -->
+                <div class="candidateinfo">
+                    <div class="userPic"><img th:src="@{/images/company_logo/}+${company.id}+'.png'" alt=""/></div>
+                    <div class="title" th:text="${company.name}"></div>
+                    <div class="loctext" th:text="${company.hq_address}"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
+                    <a href="/company/profile/edit"><button class="btn btn-primary">Edit Details</button></a>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-4">
+                <!-- Candidate Contact -->
+                <div class="candidateinfo">
+                    <div class="loctext" th:text="${company.email}"><i class="fa fa-envelope" aria-hidden="true"></i> </div>
+                    <div class="loctext" th:text="${company.website}"><i class="fa fa-globe" aria-hidden="true"></i></div>
+                    <div class="cadsocial"> <a href="http://www.twitter.com" target="_blank"><i class="fa fa-twitter-square" aria-hidden="true"></i></a> <a href="http://www.plus.google.com" target="_blank"><i class="fa fa-google-plus-square" aria-hidden="true"></i></a> <a href="http://www.facebook.com" target="_blank"> <i class="fa fa-facebook-square" aria-hidden="true"></i></a> <a href="https://www.pinterest.com" target="_blank"><i class="fa fa-pinterest-square" aria-hidden="true"></i></a> <a href="https://www.linkedin.com" target="_blank"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a> </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <div class="container userccount">
+        <div class="contentbox">
+            <h4>About Company</h4>
+            <p style="text-align: left" th:text="${company.description}"></p>
+        </div>
+    </div>
+    <br/>
+
+    <div class="container userccount">
+        <h4>Open Positions</h4>
+        <div data-th-each="position : ${company.positions}" th:if="${position.status==0}">
+            <div class="contentbox" >
+                <a th:href="@{'/position/'+${position.id}}"><h6 th:text="${position.title}"></h6></a>
+                <p style="text-align: left" th:text="${position.description}"></p>
+            </div>
+            <br/>
+        </div>
+    </div>
+</div>
+
+
+<!--Footer-->
+
+<div th:replace="common/footer :: footer"/>
+<!--Footer end-->
+
+<!--Copyright-->
+<div class="copyright">
+    <div class="container">
+        <div class="bttxt">Copyright &copy; 2017 Your Company Name. All Rights Reserved. Design by: <a
+                href="http://graphicriver.net/user/ecreativesol" target="_blank">eCreativeSolutions</a></div>
+    </div>
+</div>
+
+<!-- Bootstrap's JavaScript -->
+<script src="/js/jquery-2.1.4.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Owl carousel -->
+<script src="/js/owl.carousel.js"></script>
+
+<!-- Custom js -->
+<script src="/js/script.js"></script>
+</body>
+</html>
