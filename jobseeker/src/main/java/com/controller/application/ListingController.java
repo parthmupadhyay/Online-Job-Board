@@ -54,11 +54,13 @@ public class ListingController {
 
         System.out.println("Salary:    "+searchClass.getSalary());
         int minPrice=0;
-        int maxPrice=0;
+        int maxPrice=Integer.MAX_VALUE;
         if(searchClass.getSalary()!=null)
         {
-            minPrice = Integer.parseInt(searchClass.getSalary().get(0));
-            maxPrice = Integer.parseInt(searchClass.getSalary().get(1));
+            if(!searchClass.getSalary().get(0).isEmpty())
+                minPrice = Integer.parseInt(searchClass.getSalary().get(0));
+            if(!searchClass.getSalary().get(1).isEmpty())
+                maxPrice = Integer.parseInt(searchClass.getSalary().get(1));
         }
         else
         {

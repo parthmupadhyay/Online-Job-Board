@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+
+    <title>Online Job Portal - New Job</title>
+    <!-- Fav Icon -->
+    <link rel="shortcut icon" href="favicon.ico"/>
+
+    <!-- Owl carousel -->
+    <link href="/css/owl.carousel.css" rel="stylesheet"/>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Font Awesome -->
+    <link href="/css/font-awesome.css" rel="stylesheet"/>
+
+    <!-- Custom Style -->
+    <link href="/css/main.css" rel="stylesheet"/>
+</head>
+<body>
+<!-- Header start -->
+
+<div th:replace="common/header :: header"/>
+<!-- Header end -->
+
+<div class="pageTitle">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-6">
+                <h1>Position Details</h1>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<div class="listpgWraper">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 userccount">
+                <label class="alert alert-danger" th:if="${message}!=null" th:text="${message}"></label>
+                <h3 th:text="${'Job Id : '+position.id}"></h3>
+        <ul class="jbdetail">
+            <li class="row">
+                <div class="col-md-3 ">Location</div>
+                <div class="col-md-9 "><span style="text-align: left" th:text="${position.location}"></span></div>
+            </li>
+            <li class="row">
+                <div class="col-md-3">Description</div>
+                <div class="col-md-9"><span style="text-align: left" th:text="${position.description}"></span></div>
+            </li>
+            <li class="row">
+                <div class="col-md-3 ">Responsibilities</div>
+                <div class="col-md-9 "><span style="text-align: left" th:text="${position.responsibilities}"></span></div>
+            </li>
+            <li class="row">
+                <div class="col-md-3 ">Salary</div>
+                <div class="col-md-9 "><span style="text-align: left" th:text="${position.salary}"></span></div>
+            </li>
+            <li class="row">
+                <div class="col-md-3 ">Status</div>
+                <div class="col-md-9 "><span style="text-align: left" th:if="${position.status}=='0'">Open</span>
+                                                <span style="text-align: left" th:if="${position.status}=='1'">Filled</span>
+                                                <span style="text-align: left" th:if="${position.status}=='2'">Cancelled</span></div>
+            </li>
+        </ul>
+            <div class="row">
+                <div class="col-md-3" th:if="${position.status}=='0'">
+                <form method="post" th:action="@{/position/cancel}">
+                    <input type="hidden" name="id" id="id" th:value="${position.id}"/>
+                <button class="btn btn-danger" type="submit" >Cancel Position</button>
+                </form>
+                </div>
+                <div class="col-md-3" th:if="${!position.jobapplications.empty and position.status==0}">
+                    <a th:href="@{'/applications/'+${position.id}}"> <button class="btn btn-primary" type="button" >View Applications</button></a>
+
+                </div>
+            </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--<div class="listpgWraper" th:if="${position.jobapplications.empty}">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 userccount">
+                <h4>No Applications</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="listpgWraper" th:if="${!position.jobapplications.empty}">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 userccount">
+                <li class="col-md-4 col-sm-4" data-th-each="application : ${position.jobapplications}">
+                    <div class="int">
+
+                        <div class="post-header">
+                            <h4><a href="#." ><span th:text="${'Applicant: '+application.job_seeker.first_name +' '+application.job_seeker.last_name}"></span></a></h4>
+                        </div>
+                       <p th:text="${position.description}"></p>
+                        <a th:href="@{'/updatePosition/'+${position.id}}" class="readmore">Edit Position</a>
+                    </div>
+                </li>
+            </div>
+        </div>
+    </div>
+</div>-->
+<!--Footer-->
+
+<div th:replace="common/footer :: footer"/>
+<!--Footer end-->
+
+<!--Copyright-->
+<div class="copyright">
+    <div class="container">
+        <div class="bttxt">Copyright &copy; 2017 Your Company Name. All Rights Reserved. Design by: <a
+                href="http://graphicriver.net/user/ecreativesol" target="_blank">eCreativeSolutions</a></div>
+    </div>
+</div>
+
+<!-- Bootstrap's JavaScript -->
+<script src="/js/jquery-2.1.4.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Owl carousel -->
+<script src="/js/owl.carousel.js"></script>
+
+<!-- Custom js -->
+<script src="/js/script.js"></script>
+</body>
+</html>
