@@ -48,4 +48,13 @@ public class LoginController {
         return "login";
     }
 
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public String logout(Model model, HttpSession session)
+    {
+        if(session.getAttribute("jobseeker")!=null)
+            session.removeAttribute("jobseeker");
+
+        return "login";
+    }
+
 }

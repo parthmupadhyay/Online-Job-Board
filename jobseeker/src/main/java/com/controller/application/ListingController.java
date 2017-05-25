@@ -11,6 +11,7 @@ import org.apache.catalina.Session;
 
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +49,7 @@ public class ListingController {
         return "joblisting";
     }
 
-    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    @RequestMapping(value = "/search", method = RequestMethod.POST , consumes = MediaType.APPLICATION_JSON_VALUE)
     public String searchJobListing(Model model, HttpSession session, HttpResponse response, @RequestBody SearchClass searchClass, final RedirectAttributes redirectAttributes) throws Exception {
 
         System.out.println("Salary:    "+searchClass.getSalary());
