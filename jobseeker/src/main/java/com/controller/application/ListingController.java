@@ -128,6 +128,11 @@ public class ListingController {
 
         model.addAttribute("allCompanies", session.getAttribute("allCompanies"));
         model.addAttribute("allLocations", session.getAttribute("allLocations"));
+        Job_seeker jobseeker = (Job_seeker) session.getAttribute("jobseeker");
+        jobseeker = jobSeekerRepository.findOne(jobseeker.getId());
+        List<Position> allInterestedPositions = jobseeker.getInterestedPositions();
+
+        model.addAttribute("allInterestedPosition", allInterestedPositions);
         model.addAttribute("allPositions", session.getAttribute("allPositions"));
         return "joblisting";
     }
