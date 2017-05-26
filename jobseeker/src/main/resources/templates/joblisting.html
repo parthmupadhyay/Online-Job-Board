@@ -147,7 +147,7 @@
                                 <div class="btn btn-success" th:id="interested" style="margin-top: 20px" th:if="${not #lists.contains(allInterestedPosition, position)}">
                                     <a th:href="@{/position/interested(position_id=${position.id})}">Interested
                                     </a></div>
-                                <div class="btn btn-danger" th:id="notInterested" style="margin-top: 20px" th:if="${#lists.contains(allInterestedPosition, position)}">
+                                <div class="btn btn-danger" th:id="notInterested" style="margin-top: 20px; padding: 6px 5px;" th:if="${#lists.contains(allInterestedPosition, position)}">
                                     <a th:href="@{/notInterested(position_id=${position.id})}">Not-Interested
                                 </a></div>
                             </div>
