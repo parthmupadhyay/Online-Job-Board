@@ -27,6 +27,9 @@ public class Position {
     private int salary;
     private int status; // 0 : open 1: filled 2: Cancelled
 
+    @ManyToMany(mappedBy = "interestedPositions")
+    private List<Job_seeker> jobseekers;
+
     @OneToMany(mappedBy = "position",cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Job_application> jobapplications;
 
@@ -102,5 +105,11 @@ public class Position {
         this.status = status;
     }
 
+    public List<Job_seeker> getJobseekers() {
+        return jobseekers;
+    }
 
+    public void setJobseekers(List<Job_seeker> jobseekers) {
+        this.jobseekers = jobseekers;
+    }
 }

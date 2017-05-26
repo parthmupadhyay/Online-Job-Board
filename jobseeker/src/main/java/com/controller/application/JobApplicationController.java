@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +33,7 @@ import java.util.List;
 
 
 @Controller
+@Transactional
 public class JobApplicationController {
 
 
@@ -188,6 +190,61 @@ public class JobApplicationController {
         return "redirect:/jobListing";
     }
 
+    @RequestMapping(value="/position/allInterestedPositions" , method=RequestMethod.GET)
+    public String getAllInterestedPositions(Model model,HttpSession session){
+
+        log.debug("----------inside allInterestedPositions");
+        //Job_seeker jobseeker = jobSeekerRepository.findOne(new Long(1)); //testing
+        Job_seeker jobseeker = (Job_seeker) session.getAttribute("jobseeker");
+        Job_seeker jobs_int_pos = jobSeekerRepository.findOne(jobseeker.getId());
+        log.debug("all applications size:"+jobs_int_pos.getInterestedPositions().size());
+        List<Position> interestedPositions = jobs_int_pos.getInterestedPositions();
+        model.addAttribute("interestedPositions",interestedPositions);
+        model.addAttribute("jobseeker", jobseeker);
+        return "interestedJobListing";
+    }
+
+    @RequestMapping(value="/position/notInterested" , method=RequestMethod.GET)
+    public String markUninterestedPositions(Model model,HttpSession session,
+                                            @PathParam("position_id") Long position_id ){
+        log.debug("inside sendUniterersted positions");
+        Job_seeker jobseeker = (Job_seeker) session.getAttribute("jobseeker");
+        Job_seeker jobs_int_pos = jobSeekerRepository.findOne(jobseeker.getId());
+        log.debug("all applications size:"+jobs_int_pos.getInterestedPositions().size());
+
+        List<Position> interestedPositions = jobs_int_pos.getInterestedPositions();
+        Position uninterested = positionRepository.findOne(position_id);
+        interestedPositions.remove(uninterested);
+        jobSeekerRepository.save(jobs_int_pos);
+
+        List<Position> newInterestedPositions = jobs_int_pos.getInterestedPositions();
+        model.addAttribute("interestedPositions",newInterestedPositions);
+        model.addAttribute("jobseeker", jobseeker);
+        return "interestedJobListing";
+    }
+
+    @RequestMapping(value="/position/interested" , method=RequestMethod.GET)
+    public String markInterestedPositions(Model model,HttpSession session,
+                                            @PathParam("position_id") Long position_id ){
+        log.debug("inside mark iterersted positions");
+        Job_seeker jobseeker_session = (Job_seeker) session.getAttribute("jobseeker");
+        Job_seeker jobseeker = jobSeekerRepository.findOne(jobseeker_session.getId());
+        log.debug("all applications size:"+jobseeker.getInterestedPositions().size());
+
+        List<Position> interestedPositions = jobseeker.getInterestedPositions();
+        Position interested = positionRepository.findOne(position_id);
+        if(interestedPositions.size() == 0){
+            interestedPositions = new ArrayList<Position>();
+        }
+        interestedPositions.add(interested);
+        jobseeker.setInterestedPositions(interestedPositions);
+        jobSeekerRepository.save(jobseeker);
+
+        List<Position> newInterestedPositions = jobseeker.getInterestedPositions();
+        model.addAttribute("interestedPositions",newInterestedPositions);
+        model.addAttribute("jobseeker", jobseeker);
+        return "redirect:/jobListing";
+    }
 
     @RequestMapping(value="/allApplications" , method=RequestMethod.GET)
     public String getAllApplications(Model model,HttpSession session){

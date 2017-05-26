@@ -51,6 +51,9 @@
 
 $(document).ready(function () {
 
+    var allInterestedPositions = $('.allInterestedPositions');
+    $('#interested').show();
+
     $('#applyFilters').click(function () {
         var allLocations = $('.checkboxLocation');
         var allCompanies = $('.checkboxCompany');

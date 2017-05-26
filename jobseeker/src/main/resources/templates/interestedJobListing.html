@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Job Portal</title>
+    <!-- Fav Icon -->
+    <link rel="shortcut icon" href="favicon.ico"/>
+
+    <!-- Owl carousel -->
+    <link href="/css/owl.carousel.css" rel="stylesheet"/>
+
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Font Awesome -->
+    <link href="/css/font-awesome.css" rel="stylesheet"/>
+
+    <!-- Custom Style -->
+    <link href="/css/main.css" rel="stylesheet"/>
+
+    <!-- include sweetalert2 css library -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/sweetalert2/5.3.5/sweetalert2.min.css" />
+
+
+</head>
+<body>
+<!-- Header start -->
+<div th:replace="common/header :: header"/>
+<!-- Header end -->
+
+<!-- Page Title start -->
+<div class="pageTitle">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-6">
+                <h1 class="page-heading">Interested Job Listing</h1>
+            </div>
+            <div class="col-md-6 col-sm-6">
+                <div class="breadCrumb"><a href="#.">Home</a> / <a href="#.">Interested Jobs</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Page Title End -->
+
+<div class="listpgWraper">
+    <div class="container">
+
+
+        <div class="row" style="margin-bottom: -100px;">
+            <div class="col-xs-8">
+                <h2 class="section-headline">
+                    <h4 class="section-headline">
+                        Welcome, <span th:text="${jobseeker}? ${#strings.toUpperCase(jobseeker.first_name)} : 'Your application'">.</span>
+                    </h4>
+                </h2>
+            </div>
+        </div>
+
+        <form action="#" th:action="@{/jobApplication/changeStatus}"  method="post" enctype="multipart/form-data">>
+            <input hidden="hidden" name="jobseeker.id" th:value="${jobseeker.id}"/>
+
+            <div role="alert"><label class="alert alert-success" th:if="${rejectionMailSent} == true">
+                Application offer rejection E-mail has been sent successfully !</label>
+            </div>
+            <div role="alert"><label class="alert alert-success" th:if="${cancellationMailSent} == true">
+                Application cancellation E-mail has been sent successfully !</label>
+            </div>
+            <div role="alert"><label class="alert alert-success" th:if="${acceptOfferMailSent} == true">
+                Application offer accept E-mail has been sent successfully !</label>
+            </div>
+            <label class="alert alert-danger" th:if="${notAccepted}">Applications with ids <span th:text="${notAccepted}"></span>cannot be accepted.</label>
+            <label class="alert alert-danger" th:if="${notCancelled}">Applications with ids <span th:text="${notCancelled}"></span>cannot be cancelled.</label>
+            <label class="alert alert-danger" th:if="${notRejected}"> Applications with ids <span th:text="${notRejected}"></span>cannot be rejected.</label>
+
+
+
+                <div class="col-md-3 col-sm-8 pull-right">
+
+                </div>
+                <div class="col-md-10 col-sm-12">
+                    <!-- Search List -->
+                    <ul class="searchList">
+                        <!-- job start -->
+                        <li data-th-each="position:${interestedPositions}">
+                            <div class="row">
+                                <div class="col-md-10 col-sm-8">
+                                    <div class="jobimg"><img src="/images/jobs/jobimg.jpg" alt="Job Name"/></div>
+                                    <div class="jobinfo">
+                                        <h3><a th:href="@{/jobApplication/open(position_id=${position.id})}"><span
+                                                th:text="${position.title}"></span></a></h3>
+                                        <h5><span  th:text="${position.company.name}"></span></h5>
+                                        <div class="location"><span th:text="${position.location}"></span></div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="col-md-2 col-sm-4">
+                                    <!--<div class="listbtn"><a th:href="@{/jobApplication?id=${position.id}">Apply Now</a></div> -->
+                                    <div class="btn btn-danger"><a th:href="@{/position/notInterested(position_id=${position.id})}">Not
+                                        Interested</a></div>
+                                </div>
+
+                            </div>
+                            <p th:text="${position.description}"></p>
+                        </li>
+                        <!-- job end -->
+                    </ul>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!--Footer-->
+<div th:replace="common/footer :: footer"/>
+<!--Footer end-->
+
+<!--Copyright-->
+<div class="copyright">
+    <div class="container">
+        <div class="bttxt">Copyright &copy; 2017 Your Company Name. All Rights Reserved. Design by: <a
+                href="http://graphicriver.net/user/ecreativesol" target="_blank">eCreativeSolutions</a></div>
+    </div>
+</div>
+
+<!-- Bootstrap's JavaScript -->
+<script src="/js/jquery-2.1.4.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Owl carousel -->
+<script src="/js/owl.carousel.js"></script>
+
+<!-- Custom js -->
+<script th:src="@{/js/jobApplicationScript.js}"></script>
+</body>
+</html>

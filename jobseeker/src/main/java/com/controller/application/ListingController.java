@@ -1,8 +1,10 @@
 package com.controller.application;
 
+import com.dao.JobSeekerRepository;
 import com.dao.ListingRepository;
 import com.daoImpl.ListingRepositoryImpl;
 import com.models.Company;
+import com.models.Job_seeker;
 import com.models.Position;
 import com.models.SearchClass;
 import com.sun.deploy.net.HttpResponse;
@@ -36,6 +38,9 @@ public class ListingController {
     ListingRepository listingRepository;
 
     @Autowired
+    JobSeekerRepository jobSeekerRepository;
+
+    @Autowired
     private ListingRepositoryImpl ListingRepositoryImpl;
 
     @RequestMapping(value = "/jobListing", method = RequestMethod.GET)
@@ -45,6 +50,12 @@ public class ListingController {
         model.addAttribute("allCompanies", allCompanies);
         model.addAttribute("allLocations", allLocations);
         List<Position> allPositions = ListingRepositoryImpl.getPage(pageNumber);
+        //job seeker interested position code
+        Job_seeker jobseeker = (Job_seeker) session.getAttribute("jobseeker");
+        jobseeker = jobSeekerRepository.findOne(jobseeker.getId());
+        List<Position> allInterestedPositions = jobseeker.getInterestedPositions();
+
+        model.addAttribute("allInterestedPosition", allInterestedPositions);
         model.addAttribute("allPositions", allPositions);
         return "joblisting";
     }

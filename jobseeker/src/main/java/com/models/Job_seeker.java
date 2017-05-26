@@ -43,6 +43,13 @@ public class Job_seeker {
     @OneToMany(mappedBy = "jobseeker",cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Job_application> jobapplications;
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "jobseeker_interested_positions",
+            joinColumns = @JoinColumn(name = "jobseeker_id", referencedColumnName = "jobseeker_id"),
+            inverseJoinColumns = @JoinColumn(name = "position_id", referencedColumnName = "position_id"))
+    private List<Position> interestedPositions;
+
+
     public String getEmail() {
         return email;
     }
@@ -153,5 +160,13 @@ public class Job_seeker {
 
     public void setProfilePic(MultipartFile profilePic) {
         this.profilePic = profilePic;
+    }
+
+    public List<Position> getInterestedPositions() {
+        return interestedPositions;
+    }
+
+    public void setInterestedPositions(List<Position> interestedPositions) {
+        this.interestedPositions = interestedPositions;
     }
 }

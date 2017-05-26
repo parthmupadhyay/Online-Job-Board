@@ -120,6 +120,11 @@
 
             </div>
             <div class="col-md-8 col-sm-12">
+                <ul>
+                    <li>
+
+                    </li>
+                </ul>
                 <!-- Search List -->
                 <ul class="searchList">
                     <!-- job start -->
@@ -139,7 +144,13 @@
                                 <!--<div class="listbtn"><a th:href="@{/jobApplication?id=${position.id}">Apply Now</a></div> -->
                                 <div class="listbtn"><a th:href="@{/jobApplication/open(position_id=${position.id})}">Apply
                                     Now</a></div>
+                                <div class="btn btn-success" th:id="interested" style="margin-top: 20px" th:if="${not #lists.contains(allInterestedPosition, position)}"><a th:href="@{/position/interested(position_id=${position.id})}">Interested
+                                    </a></div>
                             </div>
+                           <!-- <div class="col-md-2 col-sm-12 pull-right">
+                                <input type="checkbox" name="id" th:value="${position.id}" />
+                                <span> Interested</span>
+                            </div>-->
                         </div>
                         <p th:text="${position.description}"></p>
                     </li>
