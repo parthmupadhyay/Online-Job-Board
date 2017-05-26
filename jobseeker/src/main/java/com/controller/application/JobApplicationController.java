@@ -223,6 +223,25 @@ public class JobApplicationController {
         return "interestedJobListing";
     }
 
+    @RequestMapping(value="/notInterested" , method=RequestMethod.GET)
+    public String markUninterestedPositionsFromJobListing(Model model,HttpSession session,
+                                            @PathParam("position_id") Long position_id ){
+        log.debug("inside sendUniterersted positions");
+        Job_seeker jobseeker = (Job_seeker) session.getAttribute("jobseeker");
+        Job_seeker jobs_int_pos = jobSeekerRepository.findOne(jobseeker.getId());
+        log.debug("all applications size:"+jobs_int_pos.getInterestedPositions().size());
+
+        List<Position> interestedPositions = jobs_int_pos.getInterestedPositions();
+        Position uninterested = positionRepository.findOne(position_id);
+        interestedPositions.remove(uninterested);
+        jobSeekerRepository.save(jobs_int_pos);
+
+        List<Position> newInterestedPositions = jobs_int_pos.getInterestedPositions();
+        model.addAttribute("interestedPositions",newInterestedPositions);
+        model.addAttribute("jobseeker", jobseeker);
+        return "redirect:/jobListing";
+    }
+
     @RequestMapping(value="/position/interested" , method=RequestMethod.GET)
     public String markInterestedPositions(Model model,HttpSession session,
                                             @PathParam("position_id") Long position_id ){
