@@ -147,8 +147,8 @@
                                 <div  th:id="interested" style="margin-top: 20px;color: white;" th:if="${not #lists.contains(allInterestedPosition, position)}">
                                     <a th:href="@{/position/interested(position_id=${position.id})}">
                                     <button class="btn btn-success">Interested</button> </a></div>
-                                <div  th:id="notInterested" style="margin-top: 20px; padding: 6px 5px;" th:if="${#lists.contains(allInterestedPosition, position)}">
-                                    <a th:href="@{/notInterested(position_id=${position.id})}"><button class="btn btn-danger">Not-Interested</button>
+                                <div  th:id="notInterested"  th:if="${#lists.contains(allInterestedPosition, position)}">
+                                    <a th:href="@{/notInterested(position_id=${position.id})}"><button class="btn btn-danger" style="margin-top: 20px; padding: 6px 5px;">Not-Interested</button>
                                 </a></div>
                             </div>
                            <!-- <div class="col-md-2 col-sm-12 pull-right">
